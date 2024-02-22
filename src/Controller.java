@@ -2,8 +2,6 @@ import java.util.Map;
 import javafx.application.Application;
 public class Controller {
     public static void main(String[] args) {
-        Application.launch(Interface.class,args);
-
 
         Board board = new Board();
 
@@ -31,7 +29,7 @@ public class Controller {
         for(Map.Entry<Direction, Direction> rd : board.getRightDirectionMap().entrySet()){
             //System.out.println(rd);
         }
-
+        Application.launch(Interface.class,args);
         //System.out.println(board.getBoardMap());
 
     }
