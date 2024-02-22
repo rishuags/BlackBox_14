@@ -1,9 +1,16 @@
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Polygon;
+import javafx.scene.control.Button;
+import javafx.scene.text.Text;
+
+
 public class Interface extends Application {
 
     @Override
@@ -11,6 +18,12 @@ public class Interface extends Application {
         Group root = new Group();
         primaryStage.setTitle("BlackBall");
         primaryStage.setScene(new Scene(root, 900, 600, Color.BLACK));
+
+        
+
+
+
+
         primaryStage.show();
     }
 
@@ -29,6 +42,10 @@ public class Interface extends Application {
         newHex.setStrokeWidth(3);
         newHex.setStroke(Color.WHITE);
         return newHex;
+    }
+
+    private void hideAtom(Circle circ){
+        circ.setVisible(false);
     }
 
 
