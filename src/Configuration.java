@@ -21,11 +21,12 @@ public class Configuration {
 
     public void fillGateDirectionMap(Board b, int startGate, int endGate, Direction odd, Direction even) {
         for (int i = startGate; i <= endGate; i++) {
-            if (i % 2 == 1) {//odd
+            if (i % 2 == 1) { //odd
                 b.getGateDirectionMap().put(i, odd);
                 //Gate gate = new Gate(i, odd);
-            } else {
+            } else { //even
                 b.getGateDirectionMap().put(i, even);
+                //Gate gate = new Gate(i, odd);
             }
         }
     }

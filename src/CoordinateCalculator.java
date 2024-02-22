@@ -22,6 +22,8 @@ public class CoordinateCalculator {
             case SOUTH_WEST:
                 next  = new Coordinate(current.getX()-2, current.getY()-1);
                 break;
+            case ATOM:
+                throw new IllegalArgumentException("Atom"); //case in development
             default: throw new IllegalArgumentException("Invalid Direction");
 
         }
