@@ -8,9 +8,7 @@ public class Configuration {
 
 
 
-
-
-    public void initGateDirectionMap(Board b) {
+    public void initGateDirectionMap(Board b) { //
         fillGateDirectionMap(b, 1, 9, Direction.SOUTH_EAST, Direction.EAST);
         fillGateDirectionMap(b, 10, 18, Direction.NORTH_EAST, Direction.EAST);
         fillGateDirectionMap(b, 19, 27, Direction.NORTH_EAST, Direction.NORTH_WEST);
