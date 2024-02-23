@@ -8,7 +8,7 @@ public class Configuration {
     private static final Integer initY = 4;
     private static final Direction initDirection = Direction.SOUTH_WEST;
 
-
+    public Map<String, Tile> getCoordMap() {return coordTileMap;}
 
     public static Direction directionLoop(Direction d) { //returns next direction to traverse in board gen.
         Direction next;
@@ -67,11 +67,6 @@ public class Configuration {
             }
             currentCoordinate = pathCalculator.calculate(nextRingDirection, currentCoordinate);
         }
-        currentTile = new Tile(new Coordinate(0, 0));
-        System.out.print(board.coordinateTileMap);
-    }
-
-    public static void main(String[] args) {
-        generateBoard();
+        coordTileMap.put("00", new Tile(new Coordinate(0, 0)));
     }
 }

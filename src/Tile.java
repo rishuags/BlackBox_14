@@ -11,6 +11,14 @@ public class Tile {
     public void setAtom() { //initializes atom in tile
         hasAtom = true;
     }
+    public void setNoAtom(){hasAtom = false;}
+
+    public boolean hasAtom(){
+        return hasAtom;
+    }
+    public Coordinate getCoordinate() {
+        return c;
+    }
 
 
 }
