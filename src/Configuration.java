@@ -67,6 +67,7 @@ public class Configuration {
             }
             currentCoordinate = pathCalculator.calculate(nextRingDirection, currentCoordinate);
         }
-        coordTileMap.put("00", new Tile(new Coordinate(0, 0)));
+        currentTile = new Tile(new Coordinate(0, 0));
+        coordTileMap.put("00", currentTile);
     }
 }
