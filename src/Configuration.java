@@ -1,13 +1,16 @@
 import java.util.Map;
 
 public class Configuration {
+    private static final Board board = new Board();
+
+    private static final Map<String, Tile> coordTileMap = board.coordinateTileMap;
     private static final Integer initX = 0;
     private static final Integer initY = 4;
     private static final Direction initDirection = Direction.SOUTH_WEST;
 
 
 
-    public Direction directionLoop(Direction d) { //returns next direction to traverse in board gen.
+    public static Direction directionLoop(Direction d) { //returns next direction to traverse in board gen.
         Direction next;
         switch(d){
             case EAST:
@@ -35,30 +38,40 @@ public class Configuration {
     }
 
 
-    public void generateBoard() //generates board in spiral pattern, starting from top left tile
+    public static void generateBoard() //generates board in spiral pattern, starting from top left tile
 
     {
         //initial parameters for pattern gen.
         Coordinate currentCoordinate = new Coordinate(initX, initY);
 
-        Tile currentTile = new Tile(currentCoordinate);
+        Tile currentTile;
 
-        Direction currentDirection = initDirection;
+        Direction currentDirection;
 
-        int tileCounter = 1;
+        int tileCounter = 0;
         int rings = 5;
         int hops;
+        Direction nextRingDirection = Direction.SOUTH_EAST; //direction to go from end tile of upper ring to start tile of lower ring
         for (int i = 1; i < rings; i++){ //indexes per ring of pattern traversed
+            currentDirection = initDirection;
             hops = rings - i;
-            for (int j = 5; 0 < j; j--) { //indexes number of turns traversed in a ring
+            for (int j = 6; 0 < j; j--) { //indexes number of turns traversed in a ring
                 for (int z = 0; z < hops; z++) { //indexes number of hops traversed in a turn
+                    currentTile = new Tile(currentCoordinate);
+                    coordTileMap.put(currentCoordinate.getKey(), currentTile);
+
+                    currentCoordinate = pathCalculator.calculate(currentDirection, currentCoordinate);
                     tileCounter++;
                 }
-                Coordinate nextCoordinate = pathCalculator.calculate(currentDirection, currentCoordinate);
                 currentDirection = directionLoop(currentDirection);
             }
+            currentCoordinate = pathCalculator.calculate(nextRingDirection, currentCoordinate);
         }
-        System.out.print(tileCounter);
+        currentTile = new Tile(new Coordinate(0, 0));
+        System.out.print(board.coordinateTileMap);
     }
 
+    public static void main(String[] args) {
+        generateBoard();
+    }
 }

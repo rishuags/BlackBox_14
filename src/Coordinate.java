@@ -7,7 +7,7 @@ public class Coordinate {
     public Coordinate(int x, int y) {
         this.x = x;
         this.y = y;
-        this.key = this.x.toString().concat(",").concat(this.y.toString());
+        this.key = this.x.toString() + this.y.toString();
     }
 
     public Integer getX() {
