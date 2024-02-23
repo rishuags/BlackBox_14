@@ -10,6 +10,9 @@ import java.util.Random;
 
 public class InterfaceCall { //Class containing all functions that create or edit elements in the interface
 
+    public static final Double fxinitialX=340.0 ;
+    public static final Double fxInitialY=75.0 ;
+
     public static Polygon generateHexagon(Double x, Double y){
         //Function to generate a hexagon from a single point, used to generate the board
         Polygon newHex= new Polygon();
@@ -73,25 +76,36 @@ public class InterfaceCall { //Class containing all functions that create or edi
         }
     }
 
-    public static void RelocateAtoms (Circle[] atomArr, Group n){
+    public static void RelocateAtoms (Circle[] atomArr, Group n, Board board){
         //Function to give atoms their new locations when desired
         for(int i=0;i<6;i++){
             n.getChildren().remove(atomArr[i]);
         }
+        /*
         Random rand=new Random();
         int randomX,randomY;
-        Double displayCoords[];
         Double initialX = 340.0; //Coordinates from where the board will be generated
         Double initialY = 75.0;
+        */
+        Double displayCoords[];
+
+        Integer atomCoordArr[][]=board.getAtomTiles();
         //Temporary code
         for (int i=0;i<6;i++){
 
+            /*
             randomX=rand.nextInt(8)*2-8;
             randomY=rand.nextInt(8)-4;
-            displayCoords=InterfaceCall.locateAtom(randomX,randomY,initialX,initialY);
+            */
+            displayCoords=InterfaceCall.locateAtom(atomCoordArr[i][0],atomCoordArr[i][1],fxinitialX,fxInitialY);
             atomArr[i]=InterfaceCall.generateAtom(displayCoords[0],displayCoords[1]);
             n.getChildren().add(atomArr[i]);
         }
+    }
+
+    public static Circle[] atomsDisplay(Circle[] atomArr,Board board){
+
+
     }
 
 }

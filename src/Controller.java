@@ -24,30 +24,21 @@ public class Controller extends Application {
         InterfaceCall.createBoardInterface(root,initialX,initialY);//add the display of the board
 
 
+
+        Configuration config = new Configuration();
+        config.generateBoard();
+        Board board = new Board();
+        board.coordinateTileMap=config.getCoordMap();
+
         Circle atomArr[]=new Circle[6]; //Array containing the circles that represent the atoms
-
-        //This code is temporary and is just used to test class functions
-        Random rand=new Random();
-        int randomX,randomY;
-        Double displayCoords[];
-        for (int i=0;i<6;i++){
-            randomX=rand.nextInt(8)*2-8;
-            randomY=rand.nextInt(8)-4;
-            System.out.println("x: "+randomX+" y: "+randomY);
-            displayCoords=InterfaceCall.locateAtom(randomX,randomY,initialX,initialY);
-            atomArr[i]=InterfaceCall.generateAtom(displayCoords[0],displayCoords[1]);
-            root.getChildren().add(atomArr[i]);
-        }
-        /*
-        In this zone the board and tiles will be created
+        board.GenerateAtoms();
 
 
 
-        */
 
         //Create the button to set atoms visible or invisible
         root.getChildren().add(createHideShowButton(atomArr));
-        root.getChildren().add(createShuffleAtomsButton(atomArr,root));
+        root.getChildren().add(createShuffleAtomsButton(atomArr,root,board));
 
 
 
@@ -72,17 +63,22 @@ public class Controller extends Application {
         });
         return changeVisible;
     }
-    private static Button createShuffleAtomsButton(Circle[] atomArr,Group root){
+    private static Button createShuffleAtomsButton(Circle[] atomArr,Group root, Board board){
         //Button to generate atoms randomly again
-        Button changeVisible= new Button("Shuffle Atoms");
-        changeVisible.setLayoutX(60);
-        changeVisible.setLayoutY(395);
-        changeVisible.setPrefWidth(235);
-        changeVisible.setPrefWidth(120);
-        changeVisible.setOnAction(event->{ //when button clicked, the array of circles taken
-            InterfaceCall.RelocateAtoms(atomArr,root);    //as arguments changes its visibility
+        //and to make the first shuffle
+
+
+
+        Button shuffle= new Button("Shuffle Atoms");
+        shuffle.setLayoutX(60);
+        shuffle.setLayoutY(395);
+        shuffle.setPrefWidth(235);
+        shuffle.setPrefWidth(120);
+        shuffle.setOnAction(event->{ //when button clicked, the array of circles taken
+            InterfaceCall.RelocateAtoms(atomArr,root,board);    //as arguments changes its visibility
         });
-        return changeVisible;
+        return shuffle;
     }
+
 
 }
