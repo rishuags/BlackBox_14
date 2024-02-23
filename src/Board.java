@@ -4,13 +4,21 @@ import java.util.Random;
 import java.util.Set;
 
 public class Board {
+
+    static final int MinX=-8;
+    static final int MaxX=8;
+    static final int MinY=-4;
+    static final int MaxY=4;
+
+
     Map<String, Tile> coordinateTileMap = new LinkedHashMap<>();
 
     public void GenerateAtoms (){
+
         Random rand = new Random();
-        int AtomIndexes[] = new int[6];
+        int[] AtomIndexes = new int[6];
         for (int i=0;i<6;i++){
-            AtomIndexes[i]= rand.nextInt(60);
+            AtomIndexes[i]= rand.nextInt(61);
             for (int j=0;j<i;j++) {
                 if (AtomIndexes[j] == AtomIndexes[i]) {
                     i--;
@@ -18,57 +26,63 @@ public class Board {
                 }
             }
         }
+        //works
 
         Set<String> keys=coordinateTileMap.keySet();
         int count=0;
+        int count2=0;
         for (String key:keys){
                 coordinateTileMap.get(key).setNoAtom();
         }
-
+        //Set<String> keys2=coordinateTileMap.keySet();
         for (String key:keys){
-            if(count==AtomIndexes[count]){
-                coordinateTileMap.get(key).setAtom();
-                count++;
+            for(int i=0;i<6;i++){
+                if(count2==AtomIndexes[i]){
+                    coordinateTileMap.get(key).setAtom();
+                    count++;
+                }
             }
-            if(count==6){
-                break;
-            }
+            count2++;
         }
+
+        /*
+        Random rand=new Random();
+        Integer[][] atomTileCoords = new Integer[6][2];
+        for(int i=0;i<6;i++){
+            int x,y;
+            do{
+                x= rand.nextInt((MaxX-MinX)/2+1)*2+MinX;
+                y= rand.nextInt((MaxY-MinY)/2+1)*2+MinY;
+            }while(!isValidCoordinates(x,y));
+            atomTileCoords[i][0]=x;
+            atomTileCoords[i][1]=y;
+        }
+        */
     }
 
     public Integer[][] getAtomTiles(){
 
         Set<String> keys=coordinateTileMap.keySet();
         Integer[][] atomTileCoords = new Integer[6][2];
-        int i=0,j;
+        Tile temp;
+        int i=0;
         for (String key:keys){
-            j=0;
-            if(coordinateTileMap.get(key).hasAtom()){
-                if(key.substring(0,1)=="-"){
-                    atomTileCoords[i][0]=-Integer.parseInt(key.substring(1,2));
-                    j=2;
-                }
-                else{
-                    atomTileCoords[i][0]=Integer.parseInt(key.substring(0,1));
-                    j=1;
-                }
-                if(key.substring(j,j+1)=="-"){
-                    atomTileCoords[i][1]=-Integer.parseInt(key.substring(j+1,j+2));
-                }
-                else{
-                    atomTileCoords[i][1]=Integer.parseInt(key.substring(j,j+1));
-                }
+            temp = coordinateTileMap.get(key);
+            if(temp.hasAtom()){
+                atomTileCoords[i][0]=temp.c.getX();
+                atomTileCoords[i][1]=temp.c.getY();
                 i++;
             }
             if(i==6){
                 break;
             }
         }
-
         return atomTileCoords;
     }
-
-
+    //helper function
+    private static boolean isValidCoordinates(int x,int y){
+        return x>=MinX && x<=MaxX && y>=MinY && y<=MaxY;
+    }
 
 
 }

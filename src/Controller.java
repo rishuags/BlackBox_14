@@ -25,20 +25,24 @@ public class Controller extends Application {
 
 
 
+
         Configuration config = new Configuration();
         config.generateBoard();
         Board board = new Board();
         board.coordinateTileMap=config.getCoordMap();
-
-        Circle atomArr[]=new Circle[6]; //Array containing the circles that represent the atoms
         board.GenerateAtoms();
+        Circle[] atomArr= new Circle[6];
+        InterfaceCall.atomsDisplay(atomArr,board);
+        for(int i=0;i<6;i++){
+            root.getChildren().add(atomArr[i]);
+        }
 
 
 
 
         //Create the button to set atoms visible or invisible
         root.getChildren().add(createHideShowButton(atomArr));
-        root.getChildren().add(createShuffleAtomsButton(atomArr,root,board));
+        //root.getChildren().add(createShuffleAtomsButton(atomArr,root,board));
 
 
 
@@ -67,8 +71,6 @@ public class Controller extends Application {
         //Button to generate atoms randomly again
         //and to make the first shuffle
 
-
-
         Button shuffle= new Button("Shuffle Atoms");
         shuffle.setLayoutX(60);
         shuffle.setLayoutY(395);
@@ -79,6 +81,8 @@ public class Controller extends Application {
         });
         return shuffle;
     }
+
+
 
 
 }

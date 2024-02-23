@@ -6,6 +6,7 @@ import javafx.stage.Stage;
 import javafx.scene.shape.Polygon;
 import javafx.scene.control.Button;
 
+import java.sql.SQLOutput;
 import java.util.Random;
 
 public class InterfaceCall { //Class containing all functions that create or edit elements in the interface
@@ -76,36 +77,37 @@ public class InterfaceCall { //Class containing all functions that create or edi
         }
     }
 
-    public static void RelocateAtoms (Circle[] atomArr, Group n, Board board){
-        //Function to give atoms their new locations when desired
+
+
+    public static void atomsDisplay(Circle[] atomArr,Board board){
+        Integer[][] atomCoordArray = board.getAtomTiles();
+        Double[][] finalCoords =new Double[6][2];
         for(int i=0;i<6;i++){
-            n.getChildren().remove(atomArr[i]);
-        }
-        /*
-        Random rand=new Random();
-        int randomX,randomY;
-        Double initialX = 340.0; //Coordinates from where the board will be generated
-        Double initialY = 75.0;
-        */
-        Double displayCoords[];
-
-        Integer atomCoordArr[][]=board.getAtomTiles();
-        //Temporary code
-        for (int i=0;i<6;i++){
-
-            /*
-            randomX=rand.nextInt(8)*2-8;
-            randomY=rand.nextInt(8)-4;
-            */
-            displayCoords=InterfaceCall.locateAtom(atomCoordArr[i][0],atomCoordArr[i][1],fxinitialX,fxInitialY);
-            atomArr[i]=InterfaceCall.generateAtom(displayCoords[0],displayCoords[1]);
-            n.getChildren().add(atomArr[i]);
+            finalCoords[i]=locateAtom(atomCoordArray[i][0],atomCoordArray[i][1],fxinitialX,fxInitialY);
+            atomArr[i]=generateAtom(finalCoords[i][0],finalCoords[i][1]);
         }
     }
 
-    public static Circle[] atomsDisplay(Circle[] atomArr,Board board){
-
-
+    public static void RelocateAtoms (Circle[] atomArr, Group root, Board board){
+        //Function to give atoms their new locations when desired
+        System.out.println("Shuffle button clicked");
+        for(int i=0;i<6;i++){
+            System.out.println(atomArr[i]);
+            root.getChildren().remove(atomArr[i]);
+            System.out.println("atom removed");
+        }
+        Double displayCoords[];
+        Integer atomCoordArr[][]=board.getAtomTiles();
+        int x,y;
+        //Temporary code
+        for (int i=0;i<6;i++){
+            x=atomCoordArr[i][0];
+            y=atomCoordArr[i][1];
+            displayCoords=InterfaceCall.locateAtom(x,y,InterfaceCall.fxinitialX,InterfaceCall.fxInitialY);
+            atomArr[i]=InterfaceCall.generateAtom(displayCoords[0],displayCoords[1]);
+            root.getChildren().add(atomArr[i]);
+            System.out.println("Current cordinates "+displayCoords[0]+","+displayCoords[1]);
+        }
     }
 
 }
