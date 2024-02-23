@@ -70,8 +70,4 @@ public class Configuration {
         currentTile = new Tile(new Coordinate(0, 0));
         System.out.print(board.coordinateTileMap);
     }
-
-    public static void main(String[] args) {
-        generateBoard();
-    }
 }
