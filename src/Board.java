@@ -13,13 +13,13 @@ public class Board {
 
     Map<String, Tile> coordinateTileMap = new LinkedHashMap<>();
 
-    public void GenerateAtoms (){
+    public void GenerateAtoms () {
 
         Random rand = new Random();
         int[] AtomIndexes = new int[6];
-        for (int i=0;i<6;i++){
-            AtomIndexes[i]= rand.nextInt(61);
-            for (int j=0;j<i;j++) {
+        for (int i = 0; i < 6; i++) {
+            AtomIndexes[i] = rand.nextInt(61);
+            for (int j = 0; j < i; j++) {
                 if (AtomIndexes[j] == AtomIndexes[i]) {
                     i--;
                     break;
@@ -27,37 +27,25 @@ public class Board {
             }
         }
         //works
-
-        Set<String> keys=coordinateTileMap.keySet();
-        int count=0;
-        int count2=0;
-        for (String key:keys){
+        Set<String> keys = coordinateTileMap.keySet();
+        int count = 0;
+        while(count<5){
+            count = 0;
+            int count2 = 0;
+            for (String key : keys) {
                 coordinateTileMap.get(key).setNoAtom();
-        }
-        //Set<String> keys2=coordinateTileMap.keySet();
-        for (String key:keys){
-            for(int i=0;i<6;i++){
-                if(count2==AtomIndexes[i]){
-                    coordinateTileMap.get(key).setAtom();
-                    count++;
-                }
             }
-            count2++;
+            //Set<String> keys2=coordinateTileMap.keySet();
+            for (String key : keys) {
+                for (int i = 0; i < 6; i++) {
+                    if (count2 == AtomIndexes[i]) {
+                        coordinateTileMap.get(key).setAtom();
+                        count++;
+                    }
+                }
+                count2++;
+            }
         }
-
-        /*
-        Random rand=new Random();
-        Integer[][] atomTileCoords = new Integer[6][2];
-        for(int i=0;i<6;i++){
-            int x,y;
-            do{
-                x= rand.nextInt((MaxX-MinX)/2+1)*2+MinX;
-                y= rand.nextInt((MaxY-MinY)/2+1)*2+MinY;
-            }while(!isValidCoordinates(x,y));
-            atomTileCoords[i][0]=x;
-            atomTileCoords[i][1]=y;
-        }
-        */
     }
 
     public Integer[][] getAtomTiles(){
@@ -79,10 +67,7 @@ public class Board {
         }
         return atomTileCoords;
     }
-    //helper function
-    private static boolean isValidCoordinates(int x,int y){
-        return x>=MinX && x<=MaxX && y>=MinY && y<=MaxY;
-    }
+
 
 
 }

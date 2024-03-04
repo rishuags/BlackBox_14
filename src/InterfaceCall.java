@@ -1,18 +1,35 @@
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.scene.shape.Polygon;
 import javafx.scene.control.Button;
+import javafx.event.EventHandler;
 
-import java.sql.SQLOutput;
-import java.util.Random;
 
 public class InterfaceCall { //Class containing all functions that create or edit elements in the interface
 
     public static final Double fxinitialX=340.0 ;
     public static final Double fxInitialY=75.0 ;
+
+    private static int tilesSelected=0;
+    public static int getTilesSelected(){return tilesSelected;}
+    public static void increaseTileCount(){tilesSelected++;}
+    public static void decreaseTileCount(){tilesSelected--;}
+    public static EventHandler<MouseEvent> tileSelect= (MouseEvent m)->{//Change the color of tile when clicked
+        if(((Polygon)(m.getSource())).getFill()==Color.AQUAMARINE){
+            //DARKGOLDENROD
+            ((Polygon)(m.getSource())).setFill(Color.BLACK);
+            decreaseTileCount();
+        }
+        else if(getTilesSelected()<6){
+            ((Polygon)(m.getSource())).setFill(Color.AQUAMARINE);
+            increaseTileCount();
+        }
+    };
+
 
     public static Polygon generateHexagon(Double x, Double y){
         //Function to generate a hexagon from a single point, used to generate the board
@@ -28,6 +45,9 @@ public class InterfaceCall { //Class containing all functions that create or edi
         newHex.setFill(Color.BLACK);
         newHex.setStrokeWidth(3);
         newHex.setStroke(Color.WHITE);
+
+        newHex.addEventFilter(MouseEvent.MOUSE_CLICKED,tileSelect);
+
         return newHex;
     }
 
@@ -87,27 +107,4 @@ public class InterfaceCall { //Class containing all functions that create or edi
             atomArr[i]=generateAtom(finalCoords[i][0],finalCoords[i][1]);
         }
     }
-
-    public static void RelocateAtoms (Circle[] atomArr, Group root, Board board){
-        //Function to give atoms their new locations when desired
-        System.out.println("Shuffle button clicked");
-        for(int i=0;i<6;i++){
-            System.out.println(atomArr[i]);
-            root.getChildren().remove(atomArr[i]);
-            System.out.println("atom removed");
-        }
-        Double displayCoords[];
-        Integer atomCoordArr[][]=board.getAtomTiles();
-        int x,y;
-        //Temporary code
-        for (int i=0;i<6;i++){
-            x=atomCoordArr[i][0];
-            y=atomCoordArr[i][1];
-            displayCoords=InterfaceCall.locateAtom(x,y,InterfaceCall.fxinitialX,InterfaceCall.fxInitialY);
-            atomArr[i]=InterfaceCall.generateAtom(displayCoords[0],displayCoords[1]);
-            root.getChildren().add(atomArr[i]);
-            System.out.println("Current cordinates "+displayCoords[0]+","+displayCoords[1]);
-        }
-    }
-
 }

@@ -68,5 +68,6 @@ public class Configuration {
             currentCoordinate = pathCalculator.calculate(nextRingDirection, currentCoordinate);
         }
         currentTile = new Tile(new Coordinate(0, 0));
+        coordTileMap.put(currentCoordinate.getKey(), currentTile);// bruhhhhh
     }
 }
