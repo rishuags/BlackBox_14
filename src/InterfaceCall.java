@@ -107,4 +107,48 @@ public class InterfaceCall { //Class containing all functions that create or edi
             atomArr[i]=generateAtom(finalCoords[i][0],finalCoords[i][1]);
         }
     }
+
+
+    public static Polygon generateLaser(Double initX, Double initY, Direction d){
+
+        //Polygon gHex=generateGreenHexagon(230.0, 75.0);
+        Polygon laserOutline = new Polygon();
+
+        //alpha vector=(8,-6)
+        //Beta vector=(-6,-8)
+        int horizontalMul=-1;
+        int verticalMul=1;
+        Double x=initX,y=initY;
+        if(d==Direction.NORTH_EAST||d==Direction.SOUTH_EAST||d==Direction.EAST){
+            horizontalMul=1;
+            x=initX+60;
+        }
+        //---------------
+        if(d==Direction.SOUTH_EAST||d==Direction.SOUTH_WEST){
+            verticalMul=-1;
+            y=initY+30;
+        }
+
+        if(d!=Direction.WEST && d!=Direction.EAST) {
+            laserOutline.getPoints().addAll(
+                    x - 10.0*horizontalMul, y - 7.5*verticalMul,
+                    x - 18.0*horizontalMul, y - 12.5*verticalMul,
+                    (x-18.0*horizontalMul)+6*horizontalMul,(y-12.5*verticalMul)-8*verticalMul,
+                    (x-11.5*horizontalMul)+6*horizontalMul,(y-7.5*verticalMul)-8*verticalMul
+            );
+        }
+        //-------
+        else {
+            laserOutline.getPoints().addAll(
+                    x , y + 10,
+                    x , y + 20,
+                    x + 10*horizontalMul, y + 20,
+                    x + 10*horizontalMul, y + 10
+            );
+        }
+        laserOutline.setFill(Color.BLACK);
+        laserOutline.setStrokeWidth(2);
+        laserOutline.setStroke(Color.WHITE);
+        return laserOutline;
+    }
 }
