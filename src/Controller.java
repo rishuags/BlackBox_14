@@ -19,9 +19,7 @@ public class Controller extends Application {
     public void start(Stage primaryStage) throws Exception{
         Group root = new Group();          //Create group node that will contain all the visible elements
         primaryStage.setTitle("Black_Box_GRP14");
-        Double initialX = InterfaceCall.fxinitialX; //Coordinates from where the board will be generated
-        Double initialY = InterfaceCall.fxInitialY;
-        InterfaceCall.createBoardInterface(root,initialX,initialY);//add the display of the board
+        InterfaceCall.createBoardInterface(root);//add the display of the board
 
 
 

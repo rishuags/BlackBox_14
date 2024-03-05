@@ -11,7 +11,7 @@ import javafx.event.EventHandler;
 
 public class InterfaceCall { //Class containing all functions that create or edit elements in the interface
 
-    public static final Double fxinitialX=340.0 ;
+    public static final Double fxInitialX=340.0 ;
     public static final Double fxInitialY=75.0 ;
 
     private static int tilesSelected=0;
@@ -52,7 +52,9 @@ public class InterfaceCall { //Class containing all functions that create or edi
     }
 
 
-    public static void createBoardInterface (Group root,Double initialX,Double initialY ){
+    public static void createBoardInterface (Group root ){
+        Double initialX=fxInitialX;
+        Double initialY=fxInitialY;
         for(int i =0;i<9;i++){
             if(i<5) {
                 for (int j = 0; j < 5 + (i % 5); j++) {
@@ -103,13 +105,13 @@ public class InterfaceCall { //Class containing all functions that create or edi
         Integer[][] atomCoordArray = board.getAtomTiles();
         Double[][] finalCoords =new Double[6][2];
         for(int i=0;i<6;i++){
-            finalCoords[i]=locateAtom(atomCoordArray[i][0],atomCoordArray[i][1],fxinitialX,fxInitialY);
+            finalCoords[i]=locateAtom(atomCoordArray[i][0],atomCoordArray[i][1],fxInitialX,fxInitialY);
             atomArr[i]=generateAtom(finalCoords[i][0],finalCoords[i][1]);
         }
     }
 
 
-    public static Polygon generateLaser(Double initX, Double initY, Direction d){
+    public static Polygon generateLaser(Double initX, Double initY, Direction d, String id){
 
         //Polygon gHex=generateGreenHexagon(230.0, 75.0);
         Polygon laserOutline = new Polygon();
@@ -149,6 +151,36 @@ public class InterfaceCall { //Class containing all functions that create or edi
         laserOutline.setFill(Color.BLACK);
         laserOutline.setStrokeWidth(2);
         laserOutline.setStroke(Color.WHITE);
+        laserOutline.setId(id);
         return laserOutline;
     }
+
+    public static void generateLaserInterface (Group root){
+        Double currentHexX = fxInitialX;
+        Double currentHexY = fxInitialY;
+        /***/
+        //set up initial directions of the gates
+        Direction direction1=Direction.SOUTH_WEST;//change this to Configuration.InitialDirection
+                                                  //before that Configuration.InitialDirection must be set public
+        Direction direction2=direction1;
+        for (int i=0;i<5;i++){
+            direction2=Configuration.directionLoop(direction2);
+        }
+        for(int i=0;i<4;i++){
+            direction1=Configuration.directionLoop(direction1);
+        }
+
+        for (int i=0;i<5;i++){
+            generateLaser(currentHexX,currentHexY,direction2,((Integer)(i+2)).toString());
+            if(i!=0){
+                generateLaser(currentHexX,currentHexY,direction1,((Integer)(i+3)).toString());
+            }
+        }
+
+
+
+
+
+    }
+
 }
