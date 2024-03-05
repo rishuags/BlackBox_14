@@ -18,10 +18,10 @@ public class Configuration {
         //54 Total Inputs/Gates
         fillGateMap(1, 9, Direction.SOUTH_EAST, Direction.EAST, Direction.SOUTH_WEST, new Coordinate(0,4));
         fillGateMap(10, 18, Direction.NORTH_EAST, Direction.EAST, Direction.SOUTH_EAST, new Coordinate(-8,0 ));
-        fillGateMap(19, 27, Direction.NORTH_EAST, Direction.NORTH_WEST, Direction.EAST, new Coordinate(-8,4));
+        fillGateMap(19, 27, Direction.NORTH_EAST, Direction.NORTH_WEST, Direction.EAST, new Coordinate(-8,-4));
         fillGateMap(28, 36, Direction.WEST, Direction.NORTH_WEST, Direction.NORTH_EAST, new Coordinate(0, -4));
-        fillGateMap(36, 45, Direction.WEST, Direction.SOUTH_WEST, Direction.NORTH_WEST, new Coordinate(8,0 ));
-        fillGateMap(45, 54, Direction.SOUTH_EAST, Direction.SOUTH_WEST, Direction.WEST, new Coordinate(8, 4));
+        fillGateMap(37, 45, Direction.WEST, Direction.SOUTH_WEST, Direction.NORTH_WEST, new Coordinate(8,0 ));
+        fillGateMap(46, 54, Direction.SOUTH_EAST, Direction.SOUTH_WEST, Direction.WEST, new Coordinate(8, 4));
     }
 
     public static void fillGateMap( Integer startGate, Integer endGate, Direction odd, Direction even, Direction movingDirection, Coordinate startingCoordinate) {

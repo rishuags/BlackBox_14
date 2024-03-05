@@ -6,15 +6,14 @@ public class Jar_Main {
         /**TESTING DATA*/
 
         Configuration config = new Configuration();
-        config.initGateMap();
-
+        Configuration.initGateMap();
 
 
         for(Map.Entry<Integer, Gate> d : config.getGateMap().entrySet()){
             System.out.println(d);
         }
 
-        Controller.main(args);
+        //Controller.main(args);
 
 
 

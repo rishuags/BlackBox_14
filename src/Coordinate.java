@@ -23,11 +23,19 @@ public class Coordinate {
         return key;
     }
 
+//    @Override
+//    public String toString() {
+//        return "Coordinate{" +
+//                "x=" + x +
+//                ", y=" + y +
+//                '}';
+//    }
+
+
     @Override
     public String toString() {
         return "Coordinate{" +
-                "x=" + x +
-                ", y=" + y +
+                "key='" + key + '\'' +
                 '}';
     }
 }
