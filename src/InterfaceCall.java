@@ -171,9 +171,9 @@ public class InterfaceCall { //Class containing all functions that create or edi
         }
 
         for (int i=0;i<5;i++){
-            generateLaser(currentHexX,currentHexY,direction2,((Integer)(i+2)).toString());
+            generateLaser(currentHexX,currentHexY,direction2,((Integer)(i+2)).toString());//add to root later
             if(i!=0){
-                generateLaser(currentHexX,currentHexY,direction1,((Integer)(i+3)).toString());
+                generateLaser(currentHexX,currentHexY,direction1,((Integer)(i+3)).toString());//add to root later
             }
         }
 
