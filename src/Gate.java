@@ -1,11 +1,11 @@
 public class Gate {
     /***/
-
-     private Tile t;
      private Direction d;
+     private Coordinate c;
 
-    public Gate(Tile t, Direction d) {
-        this.t = t;
+
+    public Gate(Direction d, Coordinate c) {
+        this.c = c;
         this.d = d;
     }
     public Gate(Direction d) {
@@ -13,8 +13,8 @@ public class Gate {
     }
 
 
-    public Tile getTile() {
-        return t;
+    public Coordinate getCoordinate() {
+        return c;
     }
 
     public Direction getDirection() {
@@ -24,8 +24,8 @@ public class Gate {
     @Override
     public String toString() {
         return "Gate{" +
-                "t=" + t +
-                ", d=" + d +
+                "d=" + d +
+                ", c=" + c +
                 '}';
     }
 }

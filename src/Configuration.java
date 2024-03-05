@@ -10,29 +10,39 @@ public class Configuration {
     private static final Direction initDirection = Direction.SOUTH_WEST;
 
     /***/
-    private Integer gateID;
+    private static Integer gateID;
     private static final Map<Integer, Gate> gateMap = new LinkedHashMap<>();
 
 
     public static void initGateMap() {
         //54 Total Inputs/Gates
-        fillGateMap(1, 9, Direction.SOUTH_EAST, Direction.EAST);
-        fillGateMap(10, 18, Direction.NORTH_EAST, Direction.EAST);
-        fillGateMap(19, 27, Direction.NORTH_EAST, Direction.NORTH_WEST);
-        fillGateMap(28, 36, Direction.WEST, Direction.NORTH_WEST);
-        fillGateMap(36, 45, Direction.WEST, Direction.SOUTH_WEST);
-        fillGateMap(45, 54, Direction.SOUTH_EAST, Direction.SOUTH_WEST);
+        fillGateMap(1, 9, Direction.SOUTH_EAST, Direction.EAST, Direction.SOUTH_WEST, new Coordinate(0,4));
+        fillGateMap(10, 18, Direction.NORTH_EAST, Direction.EAST, Direction.SOUTH_EAST, new Coordinate(-8,0 ));
+        fillGateMap(19, 27, Direction.NORTH_EAST, Direction.NORTH_WEST, Direction.EAST, new Coordinate(-8,4));
+        fillGateMap(28, 36, Direction.WEST, Direction.NORTH_WEST, Direction.NORTH_EAST, new Coordinate(0, -4));
+        fillGateMap(36, 45, Direction.WEST, Direction.SOUTH_WEST, Direction.NORTH_WEST, new Coordinate(8,0 ));
+        fillGateMap(45, 54, Direction.SOUTH_EAST, Direction.SOUTH_WEST, Direction.WEST, new Coordinate(8, 4));
     }
 
-    public static void fillGateMap( int startGate, int endGate, Direction odd, Direction even) {
-        for (int i = startGate; i <= endGate; i++) {
+    public static void fillGateMap( Integer startGate, Integer endGate, Direction odd, Direction even, Direction movingDirection, Coordinate startingCoordinate) {
+        Coordinate currentCoordinate = startingCoordinate;
+        int flag = 0; //Switching. Every second gate
+
+        //System.out.println(currentCoordinate);
+        for (Integer i = startGate; i <= endGate; i++) {
             if (i % 2 == 1) {//odd
-                gateMap.put(i, new Gate(odd));
+                gateMap.put(i, new Gate(odd, currentCoordinate));
             } else {
-                gateMap.put(i, new Gate(even));
+                gateMap.put(i, new Gate(even, currentCoordinate));
+            }
+            flag++;
+            if(flag==2){
+                currentCoordinate = PathCalculator.calculate(movingDirection, currentCoordinate);
+                flag=0;
             }
         }
     }
+
 
     public static Map<Integer, Gate> getGateMap() {
         return gateMap;
@@ -93,12 +103,12 @@ public class Configuration {
                     currentTile = new Tile(currentCoordinate);
                     coordTileMap.put(currentCoordinate.getKey(), currentTile);
 
-                    currentCoordinate = pathCalculator.calculate(currentDirection, currentCoordinate);
+                    currentCoordinate = PathCalculator.calculate(currentDirection, currentCoordinate);
                     tileCounter++;
                 }
                 currentDirection = directionLoop(currentDirection);
             }
-            currentCoordinate = pathCalculator.calculate(nextRingDirection, currentCoordinate);
+            currentCoordinate = PathCalculator.calculate(nextRingDirection, currentCoordinate);
         }
         currentTile = new Tile(new Coordinate(0, 0));
         coordTileMap.put(currentCoordinate.getKey(), currentTile);// bruhhhhh

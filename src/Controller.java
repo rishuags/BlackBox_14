@@ -49,7 +49,7 @@ public class Controller extends Application {
 
 
 
-        primaryStage.setScene(new Scene(root,900,600,Color.BLANCHEDALMOND));
+        primaryStage.setScene(new Scene(root,900,600,Color.BLACK));
         primaryStage.show();
     }
 
