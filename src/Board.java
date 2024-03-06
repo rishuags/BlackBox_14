@@ -42,6 +42,7 @@ public class Board {
                 for (int i = 0; i < 6; i++) {
                     if (count2 == AtomIndexes[i]) {
                         coordinateTileMap.get(key).setAtom();
+                        //System.out.println(coordinateTileMap.get(key).getCoordinate());
                         count++;
                     }
                 }

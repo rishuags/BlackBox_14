@@ -43,6 +43,34 @@ public class Configuration {
         }
     }
 
+    public static Direction reverseDirection(Direction d){
+        Direction reverse;
+        switch(d){
+            case EAST:
+                reverse = Direction.WEST;
+                break;
+            case WEST:
+                reverse = Direction.EAST;
+                break;
+            case NORTH_EAST:
+                reverse = Direction.SOUTH_WEST;
+                break;
+            case SOUTH_WEST:
+                reverse = Direction.NORTH_EAST;
+                break;
+            case NORTH_WEST:
+                reverse = Direction.SOUTH_EAST;
+                break;
+            case SOUTH_EAST:
+                reverse = Direction.NORTH_WEST;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid Input");
+
+        }
+
+        return reverse;
+    }
 
     public static Map<Integer, Gate> getGateMap() {
         return gateMap;
