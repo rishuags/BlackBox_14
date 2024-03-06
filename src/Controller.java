@@ -19,19 +19,23 @@ public class Controller extends Application {
     public void start(Stage primaryStage) throws Exception{
         Group root = new Group();          //Create group node that will contain all the visible elements
         primaryStage.setTitle("Black_Box_GRP14");
-        Double initialX = 340.0; //Coordinates from where the board will be generated
-        Double initialY = 75.0;
-        InterfaceCall.createBoardInterface(root,initialX,initialY);//add the display of the board
+        InterfaceCall.createBoardInterface(root);//add the display of the board
+
 
 
 
         Configuration config = new Configuration();
         config.generateBoard();
+
         Board board = new Board();
         board.coordinateTileMap=config.getCoordMap();
-
-        Circle atomArr[]=new Circle[6]; //Array containing the circles that represent the atoms
         board.GenerateAtoms();
+        Circle[] atomArr= new Circle[6];
+
+        InterfaceCall.atomsDisplay(atomArr,board);
+        for(int i=0;i<6;i++){
+            root.getChildren().add(atomArr[i]);
+        }
 
 
 
@@ -47,7 +51,7 @@ public class Controller extends Application {
     }
 
 
-    private static void main(String[] args){
+    public static void main(String[] args){
         launch(args);
     }
 
@@ -63,11 +67,9 @@ public class Controller extends Application {
         });
         return changeVisible;
     }
+
     private static Button createShuffleAtomsButton(Circle[] atomArr,Group root, Board board){
         //Button to generate atoms randomly again
-        //and to make the first shuffle
-
-
 
         Button shuffle= new Button("Shuffle Atoms");
         shuffle.setLayoutX(60);
@@ -75,10 +77,20 @@ public class Controller extends Application {
         shuffle.setPrefWidth(235);
         shuffle.setPrefWidth(120);
         shuffle.setOnAction(event->{ //when button clicked, the array of circles taken
-            InterfaceCall.RelocateAtoms(atomArr,root,board);    //as arguments changes its visibility
+            for(int i=0;i<6;i++){
+                //System.out.println(atomArr[i]);
+                root.getChildren().remove(atomArr[i]);
+                //System.out.println("atom removed");
+            }
+            board.GenerateAtoms();
+            InterfaceCall.atomsDisplay(atomArr,board);
+            for(int i=0;i<6;i++){
+                root.getChildren().add(atomArr[i]);
+            }
         });
         return shuffle;
     }
+
 
 
 }

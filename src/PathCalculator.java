@@ -1,4 +1,4 @@
-public class pathCalculator {
+public class PathCalculator {
 
     public static Coordinate calculate(Direction d, Coordinate current){
         Coordinate next = null;

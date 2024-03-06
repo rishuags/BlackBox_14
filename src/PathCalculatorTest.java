@@ -2,13 +2,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class pathCalculatorTest {
+class PathCalculatorTest {
 
     @Test
     void calculate() {
         //basic test
         Coordinate coord = new Coordinate(0,0);
-        String strCoord = pathCalculator.calculate(Direction.EAST, coord).toString();
+        String strCoord = PathCalculator.calculate(Direction.EAST, coord).toString();
         assertEquals(strCoord, new Coordinate(2, 0).toString());
 
         //testing algorithm for predicting next coord. based on direction is valid
@@ -20,7 +20,7 @@ class pathCalculatorTest {
 
         int i = 0;
         for (Direction d: dirList) {
-            Coordinate next = pathCalculator.calculate(d, coordList[i]);
+            Coordinate next = PathCalculator.calculate(d, coordList[i]);
             assertEquals(next.toString(), coordList[i + 1].toString());
             i++;
         }

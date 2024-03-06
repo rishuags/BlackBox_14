@@ -4,10 +4,11 @@ public class Coordinate {
     private Integer y;
     private String key;
 
-    public Coordinate(int x, int y) {
+    public Coordinate(Integer x, Integer y) {
         this.x = x;
         this.y = y;
-        this.key = this.x.toString() + this.y.toString();
+        /***/
+        this.key = x.toString() + y.toString();
     }
 
     public Integer getX() {
@@ -22,8 +23,19 @@ public class Coordinate {
         return key;
     }
 
+//    @Override
+//    public String toString() {
+//        return "Coordinate{" +
+//                "x=" + x +
+//                ", y=" + y +
+//                '}';
+//    }
+
+
     @Override
     public String toString() {
-        return x.toString() + ", " + y.toString();
+        return "Coordinate{" +
+                "key='" + key + '\'' +
+                '}';
     }
 }
