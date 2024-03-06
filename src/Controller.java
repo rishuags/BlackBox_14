@@ -43,8 +43,9 @@ public class Controller extends Application {
 
         //Create the button to set atoms visible or invisible
         root.getChildren().add(createHideShowButton(atomArr));
-        root.getChildren().add(createShuffleAtomsButton(atomArr,root,board));
-
+        Button mySAbutton=createShuffleAtomsButton(atomArr,root,board);
+        root.getChildren().add(mySAbutton);
+        InterfaceCall.setSAbutton(mySAbutton);
 
 
         primaryStage.setScene(new Scene(root,900,600,Color.BLACK));
@@ -73,6 +74,7 @@ public class Controller extends Application {
         //Button to generate atoms randomly again
 
         Button shuffle= new Button("Shuffle Atoms");
+        shuffle.setId("SAButton");
         shuffle.setLayoutX(60);
         shuffle.setLayoutY(395);
         shuffle.setPrefWidth(235);

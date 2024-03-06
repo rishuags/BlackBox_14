@@ -1,4 +1,5 @@
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -15,6 +16,9 @@ public class InterfaceCall { //Class containing all functions that create or edi
     public static final Double fxInitialY=75.0 ;
 
     private static int tilesSelected=0;
+
+    public static Button mySAbutton;
+    public static void setSAbutton(Button b){mySAbutton=b;}
     public static int getTilesSelected(){return tilesSelected;}
     public static void increaseTileCount(){tilesSelected++;}
     public static void decreaseTileCount(){tilesSelected--;}
@@ -28,6 +32,15 @@ public class InterfaceCall { //Class containing all functions that create or edi
             ((Polygon)(m.getSource())).setFill(Color.AQUAMARINE);
             increaseTileCount();
         }
+    };
+
+    public static EventHandler<MouseEvent> laserClick = (MouseEvent m)->{
+        ((Polygon)(m.getSource())).setFill(Color.RED); //set color of the fired lasers to red
+
+
+        Group parent = (Group)(((Polygon)(m.getSource())).getParent());
+        //System.out.println(parent.lookup("SAButton"));
+        parent.getChildren().remove(mySAbutton);
     };
 
 
@@ -111,7 +124,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
     }
 
 
-    public static Polygon generateLaser(Double initX, Double initY, Direction d, String id){
+    public static Polygon generateLaser(Double initX, Double initY, Direction d, String id, Group root){
 
         //Polygon gHex=generateGreenHexagon(230.0, 75.0);
         Polygon laserOutline = new Polygon();
@@ -152,7 +165,17 @@ public class InterfaceCall { //Class containing all functions that create or edi
         laserOutline.setStrokeWidth(2);
         laserOutline.setStroke(Color.WHITE);
         laserOutline.setId(id);
-        System.out.println(id);
+
+       //Event handler to remove the Shuffle Atoms Button when a laser is clicked (Unfinished)
+        laserOutline.addEventFilter(MouseEvent.MOUSE_CLICKED,(MouseEvent m)->{
+            //System.out.println(root.lookup("SAbutton"));
+            //root.getChildren().remove(root.lookup("SAbutton"));
+        });
+
+
+
+        laserOutline.addEventFilter(MouseEvent.MOUSE_CLICKED,laserClick);
+
         return laserOutline;
     }
 
@@ -187,13 +210,13 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
             for (int i = 0; i < 5; i++) {
                 if (i != 0) {
-                    root.getChildren().add(generateLaser(currentHexX, currentHexY, direction1, ((Integer) (count+i-1)).toString()));//add to root later
+                    root.getChildren().add(generateLaser(currentHexX, currentHexY, direction1, ((Integer) (count+i-1)).toString(),root));//add to root later
                 }
                 if(count+i==55){
-                    root.getChildren().add(generateLaser(currentHexX, currentHexY, direction2, ((Integer) (1)).toString()));//add to root later
+                    root.getChildren().add(generateLaser(currentHexX, currentHexY, direction2, ((Integer) (1)).toString(),root));//add to root later
                 }
                 else{
-                    root.getChildren().add(generateLaser(currentHexX, currentHexY, direction2, ((Integer) (count+i)).toString()));//add to root later
+                    root.getChildren().add(generateLaser(currentHexX, currentHexY, direction2, ((Integer) (count+i)).toString(),root));//add to root later
                 }
                 if(i!=4){
                     currentHexX+=30*horizontalMul;
