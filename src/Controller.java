@@ -37,7 +37,8 @@ public class Controller extends Application {
             root.getChildren().add(atomArr[i]);
         }
 
-
+        //Gate generation tests:
+        InterfaceCall.generateLaserInterface(root);
 
 
         //Create the button to set atoms visible or invisible

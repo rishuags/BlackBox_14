@@ -152,6 +152,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
         laserOutline.setStrokeWidth(2);
         laserOutline.setStroke(Color.WHITE);
         laserOutline.setId(id);
+        System.out.println(id);
         return laserOutline;
     }
 
@@ -170,13 +171,42 @@ public class InterfaceCall { //Class containing all functions that create or edi
             direction1=Configuration.directionLoop(direction1);
         }
 
-        for (int i=0;i<5;i++){
-            generateLaser(currentHexX,currentHexY,direction2,((Integer)(i+2)).toString());//add to root later
-            if(i!=0){
-                generateLaser(currentHexX,currentHexY,direction1,((Integer)(i+3)).toString());//add to root later
-            }
-        }
+        int horizontalMul=1;
+        int verticalMul=1;  //multipliers used to direct the pointer of the coords where gates will be generated
+        int count=2;
 
+        for(int j=0;j<6;j++) {
+            if(j<4&&j>0){horizontalMul=1;}
+            else{horizontalMul=-1;}
+            if(j<2){verticalMul=1;}
+            else if(j<5&&j>2){verticalMul=-1;}
+            else{
+                verticalMul=0;
+                horizontalMul=2*horizontalMul;
+                }
+
+            for (int i = 0; i < 5; i++) {
+                if (i != 0) {
+                    root.getChildren().add(generateLaser(currentHexX, currentHexY, direction1, ((Integer) (count+i-1)).toString()));//add to root later
+                }
+                if(count+i==55){
+                    root.getChildren().add(generateLaser(currentHexX, currentHexY, direction2, ((Integer) (1)).toString()));//add to root later
+                }
+                else{
+                    root.getChildren().add(generateLaser(currentHexX, currentHexY, direction2, ((Integer) (count+i)).toString()));//add to root later
+                }
+                if(i!=4){
+                    currentHexX+=30*horizontalMul;
+                    currentHexY+=50*verticalMul;
+                }
+                count++;
+            }
+            count+=4;
+            direction2=Configuration.directionLoop(direction2);
+            direction1=Configuration.directionLoop(direction1);
+            //System.out.println(direction2.toString()+" "+direction1.toString());
+
+        }
 
 
 
