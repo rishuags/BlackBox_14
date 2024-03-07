@@ -10,15 +10,13 @@ public class Jar_Main {
         Configuration.generateBoard();
 
 
-        for(Map.Entry<Integer, Gate> d : config.getGateMap().entrySet()){
-            //System.out.println(d);
-        }
-
-        for(Map.Entry<String, Tile> d : config.getCoordMap().entrySet()){
-            System.out.println(d.getKey());
-        }
-
-
+//        for(Map.Entry<Integer, Gate> d : config.getGateMap().entrySet()){
+//            //System.out.println(d);
+//        }
+//
+//        for(Map.Entry<String, Tile> d : config.getCoordMap().entrySet()){
+//            System.out.println(d.getKey());
+//        }
 
         Controller.main(args);
     }
