@@ -1,13 +1,32 @@
-import javafx.scene.control.skin.TextInputControlSkin;
+public class Gate {
+    /***/
+    private Direction d;
+    private Coordinate c;
 
-public class Gate { //class of side edge instances
-    int sNumber; //associated side number of side
-    Direction direction; //initial direction of ray
-    Tile tile; //initial tile of ray
 
-    public Gate (int n, Direction d, Tile t) {
-        sNumber = n;
-        direction = d;
-        tile = t;
+    public Gate(Direction d, Coordinate c) {
+        this.c = c;
+        this.d = d;
     }
+    public Gate(Direction d) {
+        this.d = d;
+    }
+
+
+    public Coordinate getCoordinate() {
+        return c;
+    }
+
+    public Direction getDirection() {
+        return d;
+    }
+
+    @Override
+    public String toString() {
+        return "Gate{" +
+                "d=" + d +
+                ", c=" + c +
+                '}';
+    }
+
 }

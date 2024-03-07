@@ -11,11 +11,17 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.control.Button;
 import javafx.event.EventHandler;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 
 public class InterfaceCall { //Class containing all functions that create or edit elements in the interface
 
     public static final Double fxInitialX=340.0 ;
     public static final Double fxInitialY=75.0 ;
+    public static Integer LasersFired=0;
+    public static void increaseLasersFired(){LasersFired++;}
+    public static Integer getLasersFired(){return LasersFired;}
 
     private static int tilesSelected=0;
 
@@ -38,12 +44,28 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
     public static EventHandler<MouseEvent> laserClick = (MouseEvent m)-> {
         Group parent = (Group) (((Polygon) (m.getSource())).getParent());
-        Polygon laser = (Polygon) (m.getSource());
-        if(laser.getFill()==Color.BLACK){
-            laser.setFill(Color.WHITE);
-            //laser.setStroke(Color.);
+        Polygon laserFX = (Polygon) (m.getSource());
+        //System.out.println(laserFX.getId());
+        if(laserFX.getFill()==Color.BLACK){
+            //Configuration.initGateMap();
+            Map<Integer,Gate> gateMap = Configuration.getGateMap();
+            laserFX.setFill(Color.WHITE);
+            Laser laser=new Laser(Integer.parseInt(laserFX.getId()));
+            Integer endGateKey = laser.laserTraversal();
+            System.out.println("Fire: "+(getLasersFired()+1)+", Input Gate: "+Integer.parseInt(laserFX.getId())+" , Output Gate: "+endGateKey);
 
-            InterfaceCalculator.generateGateLabel(laser);
+            if(endGateKey==0){
+                increaseLasersFired();
+                InterfaceCalculator.generateGateLabel(laserFX, 0);
+            }
+            else{
+                increaseLasersFired();
+                InterfaceCalculator.generateGateLabel(laserFX, getLasersFired());
+                Polygon endLaserFX = (Polygon)(searchNode(parent,endGateKey.toString()));
+                endLaserFX.setFill(Color.WHITE);
+                InterfaceCalculator.generateGateLabel(endLaserFX,getLasersFired());
+            }
+
 
             parent.getChildren().remove(searchNode(parent, "SAButton"));
         }
@@ -152,20 +174,35 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
         if(d!=Direction.WEST && d!=Direction.EAST) {
             laserOutline.getPoints().addAll(
+                    x - 7.0*horizontalMul, y - 5.5*verticalMul,
+                    x - 22.0*horizontalMul, y - 14.5*verticalMul,
+                    (x-22.0*horizontalMul)+5*horizontalMul,(y-14.0*verticalMul)-6.66*verticalMul,//y-0.5
+                    (x-8.5*horizontalMul)+5*horizontalMul,(y-5.0*verticalMul)-6.66*verticalMul // y-0.5
+            );
+            //Coordinates for less thick gates
+            /*laserOutline.getPoints().addAll(
                     x - 10.0*horizontalMul, y - 7.5*verticalMul,
                     x - 18.0*horizontalMul, y - 12.5*verticalMul,
                     (x-18.0*horizontalMul)+6*horizontalMul,(y-12.5*verticalMul)-8*verticalMul,
                     (x-11.5*horizontalMul)+6*horizontalMul,(y-7.5*verticalMul)-8*verticalMul
-            );
+            );*/
         }
         //-------
         else {
             laserOutline.getPoints().addAll(
+                    x , y + 8,
+                    x , y + 22,
+                    x + 7.4*horizontalMul, y + 22,
+                    x + 7.4*horizontalMul, y + 8
+            );
+            //Coordinates for less thick gates
+            /*laserOutline.getPoints().addAll(
                     x , y + 10,
                     x , y + 20,
                     x + 10*horizontalMul, y + 20,
                     x + 10*horizontalMul, y + 10
-            );
+            );*/
+
         }
         laserOutline.setFill(Color.BLACK);
         laserOutline.setStrokeWidth(2);
@@ -244,7 +281,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
                 return node;
             }
         }
-        System.out.println("Node not found");
+        //System.out.println("Node not found");
         return null;
     }
 }

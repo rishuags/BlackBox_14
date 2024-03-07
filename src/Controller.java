@@ -23,7 +23,7 @@ public class Controller extends Application {
 
 
 
-
+        Configuration.initGateMap();
         Configuration config = new Configuration();
         config.generateBoard();
 
