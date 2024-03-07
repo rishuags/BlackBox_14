@@ -52,7 +52,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
             laserFX.setFill(Color.WHITE);
             Laser laser=new Laser(Integer.parseInt(laserFX.getId()));
             Integer endGateKey = laser.laserTraversal();
-            System.out.println("Fire: "+(getLasersFired()+1)+", Input Gate: "+Integer.parseInt(laserFX.getId())+" , Output Gate: "+endGateKey);
+            //System.out.println("Fire: "+(getLasersFired()+1)+", Input Gate: "+Integer.parseInt(laserFX.getId())+" , Output Gate: "+endGateKey);
 
             if(endGateKey==0){
                 increaseLasersFired();

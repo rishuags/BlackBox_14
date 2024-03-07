@@ -60,7 +60,6 @@ public class Laser {
         //System.out.println("Current Tile: " + currentCoordinateKey); //(Testing)
         //System.out.println("Last Next Side: " + nextSide);
         path.add(currentCoordinateKey);
-
         if (currentTile.hasAtom()) {
             //break; //break traversal if an atom exists //return -1 because laser gets absorbed (never reaches end gate)
             return 0;

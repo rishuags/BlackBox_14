@@ -32,7 +32,7 @@ public class Board {
         //works
         Set<String> keys = coordinateTileMap.keySet();
         int count = 0;
-        System.out.print("Atoms generated on coordinates: ");
+        //System.out.print("Atoms generated on coordinates: ");
         while(count<5){
             count = 0;
             int count2 = 0;
@@ -44,14 +44,14 @@ public class Board {
                 for (int i = 0; i < 6; i++) {
                     if (count2 == AtomIndexes[i]) {
                         coordinateTileMap.get(key).setAtom();
-                        System.out.print(key + ", ");
+                        //System.out.print(key + ", ");
                         count++;
                     }
                 }
                 count2++;
             }
         }
-        System.out.println();
+        //System.out.println();
     }
 
     public Integer[][] getAtomTiles(){
