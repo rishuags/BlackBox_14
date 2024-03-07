@@ -1,12 +1,16 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class Laser {
+
+    public ArrayList<String> path = new ArrayList<>();
     public Laser() {
     }
 
-    public static void laserTraversal(Integer inputGate) {
+    public Integer laserTraversal(Integer inputGate) {
 
-        /** intialize function parameters **/
+        /** initialize function parameters(data) **/
         Map<Integer, Gate> gateMap = Configuration.getGateMap();
         Gate gate = gateMap.get(inputGate);
 
@@ -15,15 +19,19 @@ public class Laser {
 
         Map<String, Tile> boardMap = Configuration.getCoordTileMap(); //stores coordinateKey-Tile map
 
-        Tile currentTile = boardMap.get(currentCoordinateKey); //accessing tile object based on current coordinate key
+        Tile currentTile = boardMap.get(currentCoordinateKey);//accessing tile object based on current coordinate key
         Direction initialDirection = gate.getDirection();
         Direction currentSide = Configuration.reverseDirection(initialDirection); //reversing initial direction to get initial side
         Direction nextSide = currentTile.laserMap.get(currentSide); //assigns direction based on current side and tile mappings
         Coordinate nextCoordinate = PathCalculator.calculate(nextSide, currentCoordinate);
 
+
         while (!goesOffBoard(nextCoordinate, currentTile)) { //loop while next coordinate in path exists on board
+            //System.out.println("Current Tile: " + currentCoordinateKey); (Testing)
+            path.add(currentCoordinateKey);
             if (currentTile.hasAtom()) {
-                break; //break traversal if an atom exists
+                //break; //break traversal if an atom exists //return -1 because laser gets absorbed (never reaches end gate)
+                return -1;
             }
 
             /** iterate traversal **/
@@ -36,9 +44,16 @@ public class Laser {
             currentSide = currentTile.laserMap.get(nextSide);
             nextSide = currentTile.laserMap.get(currentSide);
         }
+
+        //System.out.println("Current Tile: " + currentCoordinateKey); (Testing)
+        path.add(currentCoordinateKey);
+        System.out.println(path.size());
+        System.out.println(path);
+
+        return 0;
     }
 
-    public static boolean goesOffBoard(Coordinate nextCoordinate, Tile currentTile) {
+    public  boolean goesOffBoard(Coordinate nextCoordinate, Tile currentTile) {
         boolean goesOffBoard = false;
         String nextCoordinateKey = nextCoordinate.getKey();
 
