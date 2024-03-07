@@ -1,14 +1,26 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 public class Laser {
 
     public ArrayList<String> path = new ArrayList<>();
-    public Laser() {
+
+    private Integer inputGate;
+    public Laser(Integer inputGate) {
+        if(inputGate > 54|| inputGate < 1){
+            throw new IllegalArgumentException("Invalid Gate Input");
+        }
+        this.inputGate = inputGate;
+    }
+    public Integer getInputGate() {
+        return inputGate;
     }
 
-    public Integer laserTraversal(Integer inputGate) {
+    //Takes in input gate, returns output gate if laser reaches, (also does other things)
+    //Returns 0 if laser hits atom, else output gate
+    public Integer laserTraversal() {
 
         /** initialize function parameters(data) **/
         Map<Integer, Gate> gateMap = Configuration.getGateMap();
@@ -31,7 +43,7 @@ public class Laser {
             path.add(currentCoordinateKey);
             if (currentTile.hasAtom()) {
                 //break; //break traversal if an atom exists //return -1 because laser gets absorbed (never reaches end gate)
-                return -1;
+                return 0;
             }
 
             /** iterate traversal **/
@@ -45,12 +57,30 @@ public class Laser {
             nextSide = currentTile.laserMap.get(currentSide);
         }
 
-        //System.out.println("Current Tile: " + currentCoordinateKey); (Testing)
+        //System.out.println("Current Tile: " + currentCoordinateKey); //(Testing)
+        //System.out.println("Last Next Side: " + nextSide);
         path.add(currentCoordinateKey);
-        System.out.println(path.size());
-        System.out.println(path);
 
-        return 0;
+
+        //Returning Output Gate
+        Set<Integer> keys = gateMap.keySet();
+        Integer outputGate = -1;
+        String temp;
+        Direction d;
+        for(Integer key : keys){
+            temp = gateMap.get(key).getCoordinate().getKey();
+            d = Configuration.reverseDirection(gateMap.get(key).getDirection());
+            if(temp.equals(currentCoordinateKey) && d==nextSide){
+                outputGate = key;
+            }
+        }
+
+        //System.out.println(path.size());
+        //System.out.println(path);
+
+        //System.out.println("Input Gate: " +  inputGate +  " Output Gate: " + outputGate);
+
+        return outputGate; //
     }
 
     public  boolean goesOffBoard(Coordinate nextCoordinate, Tile currentTile) {
