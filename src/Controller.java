@@ -45,7 +45,7 @@ public class Controller extends Application {
         root.getChildren().add(createHideShowButton(atomArr));
         Button mySAbutton=createShuffleAtomsButton(atomArr,root,board);
         root.getChildren().add(mySAbutton);
-        InterfaceCall.setSAbutton(mySAbutton);
+        //InterfaceCall.setSAbutton(mySAbutton);
 
 
         primaryStage.setScene(new Scene(root,900,600,Color.BLACK));

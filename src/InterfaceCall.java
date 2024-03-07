@@ -4,6 +4,8 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.shape.Polygon;
 import javafx.scene.control.Button;
@@ -17,8 +19,8 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
     private static int tilesSelected=0;
 
-    public static Button mySAbutton;
-    public static void setSAbutton(Button b){mySAbutton=b;}
+    //public static Button mySAbutton;
+    //public static void setSAbutton(Button b){mySAbutton=b;}
     public static int getTilesSelected(){return tilesSelected;}
     public static void increaseTileCount(){tilesSelected++;}
     public static void decreaseTileCount(){tilesSelected--;}
@@ -34,13 +36,17 @@ public class InterfaceCall { //Class containing all functions that create or edi
         }
     };
 
-    public static EventHandler<MouseEvent> laserClick = (MouseEvent m)->{
-        ((Polygon)(m.getSource())).setFill(Color.RED); //set color of the fired lasers to red
+    public static EventHandler<MouseEvent> laserClick = (MouseEvent m)-> {
+        Group parent = (Group) (((Polygon) (m.getSource())).getParent());
+        Polygon laser = (Polygon) (m.getSource());
+        if(laser.getFill()==Color.BLACK){
+            laser.setFill(Color.WHITE);
+            //laser.setStroke(Color.);
 
+            InterfaceCalculator.generateGateLabel(laser);
 
-        Group parent = (Group)(((Polygon)(m.getSource())).getParent());
-        //System.out.println(parent.lookup("SAButton"));
-        parent.getChildren().remove(mySAbutton);
+            parent.getChildren().remove(searchNode(parent, "SAButton"));
+        }
     };
 
 
@@ -126,7 +132,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
     public static Polygon generateLaser(Double initX, Double initY, Direction d, String id, Group root){
 
-        //Polygon gHex=generateGreenHexagon(230.0, 75.0);
+
         Polygon laserOutline = new Polygon();
 
         //alpha vector=(8,-6)
@@ -230,10 +236,15 @@ public class InterfaceCall { //Class containing all functions that create or edi
             //System.out.println(direction2.toString()+" "+direction1.toString());
 
         }
-
-
-
-
     }
 
+    public static Node searchNode(Group root, String id){
+        for(Node node: root.getChildren()){
+            if(node.getId()!=null && node.getId().equals(id)){
+                return node;
+            }
+        }
+        System.out.println("Node not found");
+        return null;
+    }
 }
