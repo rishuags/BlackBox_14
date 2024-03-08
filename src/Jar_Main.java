@@ -1,3 +1,5 @@
+import javafx.application.Application;
+
 import java.util.Map;
 
 public class Jar_Main {
@@ -18,6 +20,7 @@ public class Jar_Main {
 //            System.out.println(d.getKey());
 //        }
 
-        Controller.main(args);
+        //Controller.main(args);
+        Application.launch(Controller.class, args);
     }
 }
