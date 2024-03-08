@@ -1,12 +1,30 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 public class Laser {
-    public Laser() {
+
+    public ArrayList<String> path = new ArrayList<>();
+
+    private Integer inputGate;
+    public Laser(Integer inputGate) {
+        if(inputGate > 54|| inputGate < 1){
+            throw new IllegalArgumentException("Invalid Gate Input");
+        }
+        this.inputGate = inputGate;
+    }
+    public Integer getInputGate() {
+        return inputGate;
     }
 
-    public static void laserTraversal(Integer inputGate) {
+    //Takes in input gate, returns output gate if laser reaches, (also does other things)
+    //Path determined based on unique entry-exit tile-side mappings for each tile
+    //Returns 0 if laser hits atom, else output gate
 
-        /** intialize function parameters **/
+    public Integer laserTraversal() {
+
+        /** initialize function parameters(data) **/
         Map<Integer, Gate> gateMap = Configuration.getGateMap();
         Gate gate = gateMap.get(inputGate);
 
@@ -15,15 +33,19 @@ public class Laser {
 
         Map<String, Tile> boardMap = Configuration.getCoordTileMap(); //stores coordinateKey-Tile map
 
-        Tile currentTile = boardMap.get(currentCoordinateKey); //accessing tile object based on current coordinate key
+        Tile currentTile = boardMap.get(currentCoordinateKey);//accessing tile object based on current coordinate key
         Direction initialDirection = gate.getDirection();
         Direction currentSide = Configuration.reverseDirection(initialDirection); //reversing initial direction to get initial side
         Direction nextSide = currentTile.laserMap.get(currentSide); //assigns direction based on current side and tile mappings
         Coordinate nextCoordinate = PathCalculator.calculate(nextSide, currentCoordinate);
 
+
         while (!goesOffBoard(nextCoordinate, currentTile)) { //loop while next coordinate in path exists on board
+            //System.out.println("Current Tile: " + currentCoordinateKey); (Testing)
+            path.add(currentCoordinateKey);
             if (currentTile.hasAtom()) {
-                break; //break traversal if an atom exists
+                //break; //break traversal if an atom exists //return -1 because laser gets absorbed (never reaches end gate)
+                return 0;
             }
 
             /** iterate traversal **/
@@ -36,15 +58,53 @@ public class Laser {
             currentSide = currentTile.laserMap.get(nextSide);
             nextSide = currentTile.laserMap.get(currentSide);
         }
+
+        //System.out.println("Current Tile: " + currentCoordinateKey); //(Testing)
+        //System.out.println("Last Next Side: " + nextSide);
+        path.add(currentCoordinateKey);
+        if (currentTile.hasAtom()) {
+            //break; //break traversal if an atom exists //return -1 because laser gets absorbed (never reaches end gate)
+            return 0;
+        }
+
+
+        /**
+         * Returning Output Gate based on the current edge tile, and the direction the ray is heading(contra-to gate input direction)
+         **/
+
+        Set<Integer> keys = gateMap.keySet(); //returns set of all gate index numbers (1-54)
+        Integer outputGate = -1;
+        String temp;
+
+        Direction gateInputDirection;
+        Direction gateOutputDirection;
+
+        for(Integer key : keys){
+            temp = gateMap.get(key).getCoordinate().getKey(); //stores entry tile of current gate
+
+            gateInputDirection = gateMap.get(key).getDirection(); //stores input direction of a ray at current gate
+            gateOutputDirection = Configuration.reverseDirection(gateInputDirection); //reverse input direction (direction needed to exit gate)
+
+            if(temp.equals(currentCoordinateKey) && gateOutputDirection==nextSide){
+                outputGate = key;
+            }
+        }
+
+        //System.out.println(path.size());
+        //System.out.println(path);
+
+        //System.out.println("Input Gate: " +  inputGate +  " Output Gate: " + outputGate);
+
+        return outputGate;
     }
 
-    public static boolean goesOffBoard(Coordinate nextCoordinate, Tile currentTile) {
+    public  boolean goesOffBoard(Coordinate nextCoordinate, Tile currentTile) {
         boolean goesOffBoard = false;
         String nextCoordinateKey = nextCoordinate.getKey();
 
         if (currentTile.isEdgeTile()) { //if currentTile is not edge, don't run loop (saves on time)
             if (!Configuration.getCoordTileMap().containsKey(nextCoordinateKey)) {goesOffBoard = true;} //if coordinate is out of range of map, out of bounds is true
-            }
+        }
 
         return goesOffBoard;
     }
