@@ -5,9 +5,9 @@ public class Jar_Main {
 
         /**TESTING DATA*/
 
-        Configuration config = new Configuration();
-        Configuration.initGateMap();
-        Configuration.generateBoard();
+//        Configuration config = new Configuration();
+//        Configuration.initGateMap();
+//        Configuration.generateBoard();
 
 
 //        for(Map.Entry<Integer, Gate> d : config.getGateMap().entrySet()){

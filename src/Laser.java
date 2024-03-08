@@ -19,7 +19,9 @@ public class Laser {
     }
 
     //Takes in input gate, returns output gate if laser reaches, (also does other things)
+    //Path determined based on unique entry-exit tile-side mappings for each tile
     //Returns 0 if laser hits atom, else output gate
+
     public Integer laserTraversal() {
 
         /** initialize function parameters(data) **/
@@ -60,17 +62,30 @@ public class Laser {
         //System.out.println("Current Tile: " + currentCoordinateKey); //(Testing)
         //System.out.println("Last Next Side: " + nextSide);
         path.add(currentCoordinateKey);
+        if (currentTile.hasAtom()) {
+            //break; //break traversal if an atom exists //return -1 because laser gets absorbed (never reaches end gate)
+            return 0;
+        }
 
 
-        //Returning Output Gate
-        Set<Integer> keys = gateMap.keySet();
+        /**
+         * Returning Output Gate based on the current edge tile, and the direction the ray is heading(contra-to gate input direction)
+         **/
+
+        Set<Integer> keys = gateMap.keySet(); //returns set of all gate index numbers (1-54)
         Integer outputGate = -1;
         String temp;
-        Direction d;
+
+        Direction gateInputDirection;
+        Direction gateOutputDirection;
+
         for(Integer key : keys){
-            temp = gateMap.get(key).getCoordinate().getKey();
-            d = Configuration.reverseDirection(gateMap.get(key).getDirection());
-            if(temp.equals(currentCoordinateKey) && d==nextSide){
+            temp = gateMap.get(key).getCoordinate().getKey(); //stores entry tile of current gate
+
+            gateInputDirection = gateMap.get(key).getDirection(); //stores input direction of a ray at current gate
+            gateOutputDirection = Configuration.reverseDirection(gateInputDirection); //reverse input direction (direction needed to exit gate)
+
+            if(temp.equals(currentCoordinateKey) && gateOutputDirection==nextSide){
                 outputGate = key;
             }
         }
@@ -80,7 +95,7 @@ public class Laser {
 
         //System.out.println("Input Gate: " +  inputGate +  " Output Gate: " + outputGate);
 
-        return outputGate; //
+        return outputGate;
     }
 
     public  boolean goesOffBoard(Coordinate nextCoordinate, Tile currentTile) {

@@ -19,16 +19,13 @@ public class Controller extends Application {
     public void start(Stage primaryStage) throws Exception{
         Group root = new Group();          //Create group node that will contain all the visible elements
         primaryStage.setTitle("Black_Box_GRP14");
-        Double initialX = InterfaceCall.fxinitialX; //Coordinates from where the board will be generated
-        Double initialY = InterfaceCall.fxInitialY;
-        InterfaceCall.createBoardInterface(root,initialX,initialY);//add the display of the board
+        InterfaceCall.createBoardInterface(root);//add the display of the board
 
 
 
-
+        Configuration.initGateMap();
         Configuration config = new Configuration();
         config.generateBoard();
-
 
         Board board = new Board();
         board.coordinateTileMap=config.getCoordMap();
@@ -40,13 +37,15 @@ public class Controller extends Application {
             root.getChildren().add(atomArr[i]);
         }
 
-
+        //Gate generation tests:
+        InterfaceCall.generateLaserInterface(root);
 
 
         //Create the button to set atoms visible or invisible
         root.getChildren().add(createHideShowButton(atomArr));
-        root.getChildren().add(createShuffleAtomsButton(atomArr,root,board));
-
+        Button mySAbutton=createShuffleAtomsButton(atomArr,root,board);
+        root.getChildren().add(mySAbutton);
+        //InterfaceCall.setSAbutton(mySAbutton);
 
 
         primaryStage.setScene(new Scene(root,900,600,Color.BLACK));
@@ -75,6 +74,7 @@ public class Controller extends Application {
         //Button to generate atoms randomly again
 
         Button shuffle= new Button("Shuffle Atoms");
+        shuffle.setId("SAButton");
         shuffle.setLayoutX(60);
         shuffle.setLayoutY(395);
         shuffle.setPrefWidth(235);
