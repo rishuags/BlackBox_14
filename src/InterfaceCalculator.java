@@ -12,7 +12,14 @@ public class InterfaceCalculator {
         Group parent = (Group)(laser.getParent());
 
         Text gateLabel= new Text();
-        if(laserCount==0){
+
+        //Search for the initial gate that was clicked
+        if(laserCount==-1){
+            gateLabel.setText("R");
+            gateLabel.setFill(Color.GREEN);
+            gateLabel.setStroke(Color.GREEN);
+        }
+        else if(laserCount==0){
             gateLabel.setText("H");
             gateLabel.setFill(Color.RED);
             gateLabel.setStroke(Color.RED);

@@ -54,8 +54,11 @@ public class InterfaceCall { //Class containing all functions that create or edi
             Integer endGateKey = laser.laserTraversal();
             //System.out.println("Fire: "+(getLasersFired()+1)+", Input Gate: "+Integer.parseInt(laserFX.getId())+" , Output Gate: "+endGateKey);
 
-            if(endGateKey==0){
-                increaseLasersFired();
+            if(Integer.parseInt(laserFX.getId())==endGateKey){
+                InterfaceCalculator.generateGateLabel(laserFX, -1);
+            }
+            else if(endGateKey==0){
+                //increaseLasersFired();
                 InterfaceCalculator.generateGateLabel(laserFX, 0);
             }
             else{
