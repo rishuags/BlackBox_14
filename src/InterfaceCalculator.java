@@ -16,8 +16,8 @@ public class InterfaceCalculator {
         //Search for the initial gate that was clicked
         if(laserCount==-1){
             gateLabel.setText("R");
-            gateLabel.setFill(Color.GREEN);
-            gateLabel.setStroke(Color.GREEN);
+            gateLabel.setFill(Color.GREENYELLOW);
+            gateLabel.setStroke(Color.GREENYELLOW);
         }
         else if(laserCount==0){
             gateLabel.setText("H");
