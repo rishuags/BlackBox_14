@@ -1,15 +1,15 @@
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.scene.shape.Polygon;
-import javafx.scene.control.Button;
 import javafx.event.EventHandler;
+import javafx.scene.text.TextAlignment;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -17,26 +17,29 @@ import java.util.Map;
 
 public class InterfaceCall { //Class containing all functions that create or edit elements in the interface
 
+    public static final Font mainFont = new Font("Consolas",30);
     public static final Double fxInitialX=340.0 ;
     public static final Double fxInitialY=75.0 ;
     public static Integer LasersFired=0;
+    public static Integer score=0;
+    public static Circle[] atomsFX = new Circle[6];
+    public static Arc[] influenceFX = new Arc[6];
+    public static Text scoreDisplayFX=null;
     public static void increaseLasersFired(){LasersFired++;}
     public static Integer getLasersFired(){return LasersFired;}
 
     private static int tilesSelected=0;
 
-    //public static Button mySAbutton;
-    //public static void setSAbutton(Button b){mySAbutton=b;}
     public static int getTilesSelected(){return tilesSelected;}
     public static void increaseTileCount(){tilesSelected++;}
     public static void decreaseTileCount(){tilesSelected--;}
     public static EventHandler<MouseEvent> tileSelect= (MouseEvent m)->{//Change the color of tile when clicked
         if(((Polygon)(m.getSource())).getFill()==Color.AQUAMARINE){
-            //DARKGOLDENROD
             ((Polygon)(m.getSource())).setFill(Color.BLACK);
             decreaseTileCount();
         }
         else if(getTilesSelected()<6){
+            //Alternative Colors : DARKGOLDENROD, DARK_AQUAMARINE
             ((Polygon)(m.getSource())).setFill(Color.AQUAMARINE);
             increaseTileCount();
         }
@@ -48,6 +51,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
         //System.out.println(laserFX.getId());
         if(laserFX.getFill()==Color.BLACK){
             //Configuration.initGateMap();
+            score++;
             Map<Integer,Gate> gateMap = Configuration.getGateMap();
             laserFX.setFill(Color.WHITE);
             Laser laser=new Laser(Integer.parseInt(laserFX.getId()));
@@ -69,7 +73,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
                 InterfaceCalculator.generateGateLabel(endLaserFX,getLasersFired());
             }
 
-
+            updateScore();
             parent.getChildren().remove(searchNode(parent, "SAButton"));
         }
     };
@@ -97,6 +101,8 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
 
     public static void createBoardInterface (Group root ){
+        updateScore();//create the scoreboard
+        root.getChildren().add(scoreDisplayFX);
         Double initialX=fxInitialX;
         Double initialY=fxInitialY;
         for(int i =0;i<9;i++){
@@ -125,6 +131,25 @@ public class InterfaceCall { //Class containing all functions that create or edi
         return newCir;
     }
 
+    public static Arc circleInfluence(Double x, Double y){
+
+        Arc arc = new Arc();
+        arc.setCenterX(x);
+        arc.setCenterY(y);
+
+        arc.setRadiusX(60);
+        arc.setRadiusY(60);
+
+        arc.setStartAngle(45.0f);
+        arc.setLength(360.0f);
+        arc.setType(ArcType.CHORD);
+
+        arc.setStroke(Color.YELLOW);
+        arc.setStrokeWidth(2.0);
+        arc.setFill(null);
+        return arc;
+    }
+
     public static Double[] locateAtom(int x, int y, Double initialX, Double initialY){//function to change the coordinates of an atom to javaFX coordinates
         //y: +50 (4 times), +15
         //x: +60 (2 times), +30
@@ -141,18 +166,36 @@ public class InterfaceCall { //Class containing all functions that create or edi
         for (Circle circle : atomArr) {
             circle.setVisible(!circle.isVisible());
         }
+        for(Arc arc : influenceFX){
+            arc.setVisible(!arc.isVisible());
+        }
     }
 
 
 
-    public static void atomsDisplay(Circle[] atomArr,Board board){
-        Integer[][] atomCoordArray = board.getAtomTiles();
+    public static void atomsDisplay(Board board, Group root){
+        Integer[][] atomCoordArray = board.getAtomTiles();//function that returns a 2d array containing the coordinates of atoms
         Double[][] finalCoords =new Double[6][2];
         for(int i=0;i<6;i++){
             finalCoords[i]=locateAtom(atomCoordArray[i][0],atomCoordArray[i][1],fxInitialX,fxInitialY);
-            atomArr[i]=generateAtom(finalCoords[i][0],finalCoords[i][1]);
+            atomsFX[i]=generateAtom(finalCoords[i][0],finalCoords[i][1]);
+            influenceFX[i]=circleInfluence(finalCoords[i][0],finalCoords[i][1]);
+            root.getChildren().add(influenceFX[i]);
         }
+
+        for(int i=0;i<6;i++){
+            root.getChildren().add(atomsFX[i]);
+        }
+
     }
+
+//    public static double[] cutCircInfluence(Board board,Integer [] coord){
+//
+//        if(!board.coordinateTileMap.get(coord[0].toString()+coord[1].toString()).isEdgeTile()){
+//            return null;
+//        }
+//
+//    }
 
 
     public static Polygon generateLaser(Double initX, Double initY, Direction d, String id, Group root){
@@ -212,14 +255,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
         laserOutline.setStroke(Color.WHITE);
         laserOutline.setId(id);
 
-       //Event handler to remove the Shuffle Atoms Button when a laser is clicked (Unfinished)
-        laserOutline.addEventFilter(MouseEvent.MOUSE_CLICKED,(MouseEvent m)->{
-            //System.out.println(root.lookup("SAbutton"));
-            //root.getChildren().remove(root.lookup("SAbutton"));
-        });
-
-
-
+       //Event handler to remove the Shuffle Atoms Button when a laser is clicked
         laserOutline.addEventFilter(MouseEvent.MOUSE_CLICKED,laserClick);
 
         return laserOutline;
@@ -275,6 +311,21 @@ public class InterfaceCall { //Class containing all functions that create or edi
             direction1=Configuration.directionLoop(direction1);
             //System.out.println(direction2.toString()+" "+direction1.toString());
 
+        }
+    }
+
+    public static void updateScore(){
+        if (scoreDisplayFX==null){ //if no scoreboard has been built yet, create one
+            scoreDisplayFX = new Text("Score: "+ String.valueOf(0));
+            scoreDisplayFX.setX(fxInitialX+475.0);
+            scoreDisplayFX.setY(fxInitialY);
+            scoreDisplayFX.setFont(mainFont);
+            scoreDisplayFX.setTextAlignment(TextAlignment.JUSTIFY);
+            scoreDisplayFX.setStroke(Color.WHITE);
+            scoreDisplayFX.setStrokeWidth(1);
+        }
+        else{
+            scoreDisplayFX.setText("Score: "+ String.valueOf(score));
         }
     }
 

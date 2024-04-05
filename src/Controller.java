@@ -30,25 +30,22 @@ public class Controller extends Application {
         Board board = new Board();
         board.coordinateTileMap=config.getCoordMap();
         board.GenerateAtoms();
-        Circle[] atomArr= new Circle[6];
 
-        InterfaceCall.atomsDisplay(atomArr,board);
-        for(int i=0;i<6;i++){
-            root.getChildren().add(atomArr[i]);
-        }
+        InterfaceCall.atomsDisplay(board,root);
+
 
         //Gate generation tests:
         InterfaceCall.generateLaserInterface(root);
 
 
         //Create the button to set atoms visible or invisible
-        root.getChildren().add(createHideShowButton(atomArr));
-        Button mySAbutton=createShuffleAtomsButton(atomArr,root,board);
+        root.getChildren().add(createHideShowButton());
+        Button mySAbutton=createShuffleAtomsButton(root,board);
         root.getChildren().add(mySAbutton);
         //InterfaceCall.setSAbutton(mySAbutton);
 
 
-        primaryStage.setScene(new Scene(root,900,600,Color.BLACK));
+        primaryStage.setScene(new Scene(root,1100,600,Color.BLACK));
         primaryStage.show();
     }
 
@@ -57,7 +54,7 @@ public class Controller extends Application {
     launch(args);
     }
 
-    private static Button createHideShowButton(Circle[] atomArr){
+    private static Button createHideShowButton(){
         //Button to cange the visibility of the atoms
         Button changeVisible= new Button("Hide/Show Atoms");
         changeVisible.setLayoutX(60);
@@ -65,12 +62,12 @@ public class Controller extends Application {
         changeVisible.setPrefWidth(235);
         changeVisible.setPrefWidth(120);
         changeVisible.setOnAction(event->{ //when button clicked, the array of circles taken
-            InterfaceCall.changeAtomVisible(atomArr);    //as arguments changes its visibility
+            InterfaceCall.changeAtomVisible(InterfaceCall.atomsFX);    //as arguments changes its visibility
         });
         return changeVisible;
     }
 
-    private static Button createShuffleAtomsButton(Circle[] atomArr,Group root, Board board){
+    private static Button createShuffleAtomsButton(Group root, Board board){
         //Button to generate atoms randomly again
 
         Button shuffle= new Button("Shuffle Atoms");
@@ -82,14 +79,12 @@ public class Controller extends Application {
         shuffle.setOnAction(event->{ //when button clicked, the array of circles taken
             for(int i=0;i<6;i++){
                 //System.out.println(atomArr[i]);
-                root.getChildren().remove(atomArr[i]);
+                root.getChildren().remove(InterfaceCall.atomsFX[i]);
+                root.getChildren().remove(InterfaceCall.influenceFX[i]);
                 //System.out.println("atom removed");
             }
             board.GenerateAtoms();
-            InterfaceCall.atomsDisplay(atomArr,board);
-            for(int i=0;i<6;i++){
-                root.getChildren().add(atomArr[i]);
-            }
+            InterfaceCall.atomsDisplay(board,root);
         });
         return shuffle;
     }
