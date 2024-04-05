@@ -131,8 +131,8 @@ public class InterfaceCall { //Class containing all functions that create or edi
         return newCir;
     }
 
-    public static Arc circleInfluence(Double x, Double y){
-
+    public static Arc circleInfluence(Double x, Double y, float startAngle, float angleSize){
+    //Create visual element that represents the circles of influence around atoms
         Arc arc = new Arc();
         arc.setCenterX(x);
         arc.setCenterY(y);
@@ -140,9 +140,9 @@ public class InterfaceCall { //Class containing all functions that create or edi
         arc.setRadiusX(50);
         arc.setRadiusY(50);
 
-        arc.setStartAngle(45.0f);
-        arc.setLength(360.0f);
-        arc.setType(ArcType.CHORD);
+        arc.setStartAngle(startAngle);
+        arc.setLength(angleSize);
+        arc.setType(ArcType.OPEN);
 
         arc.setStroke(Color.YELLOW);//Alternative Colors: YELLOW, GREEN
         arc.setStrokeWidth(2.0);
@@ -176,11 +176,14 @@ public class InterfaceCall { //Class containing all functions that create or edi
     public static void atomsDisplay(Board board, Group root){
         Integer[][] atomCoordArray = board.getAtomTiles();//function that returns a 2d array containing the coordinates of atoms
         Double[][] finalCoords =new Double[6][2];
+        float[] influenceSpecification; // array that will hold specifications to generate circles of influence
         for(int i=0;i<6;i++){
             finalCoords[i]=locateAtom(atomCoordArray[i][0],atomCoordArray[i][1],fxInitialX,fxInitialY);
-            atomsFX[i]=generateAtom(finalCoords[i][0],finalCoords[i][1]);
-            influenceFX[i]=circleInfluence(finalCoords[i][0],finalCoords[i][1]);
-            root.getChildren().add(influenceFX[i]);
+            atomsFX[i]=generateAtom(finalCoords[i][0],finalCoords[i][1]); //generate an atom
+            influenceSpecification = InterfaceCalculator.influenceCut(atomCoordArray[i][0],atomCoordArray[i][1], board);
+            //generate a circle of influence
+            influenceFX[i]=circleInfluence(finalCoords[i][0],finalCoords[i][1],influenceSpecification[0], influenceSpecification[1]);
+            root.getChildren().add(influenceFX[i]);// add the circle of influence to the GUI
         }
 
         for(int i=0;i<6;i++){
@@ -199,7 +202,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
 
     public static Polygon generateLaser(Double initX, Double initY, Direction d, String id, Group root){
-
+    //Generates the button that has to be pressed to fire a ray
 
         Polygon laserOutline = new Polygon();
 
@@ -261,7 +264,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
         return laserOutline;
     }
 
-    public static void generateLaserInterface (Group root){
+    public static void generateLaserInterface (Group root){//Generate all of the gates from where rays are fired
         Double currentHexX = fxInitialX;
         Double currentHexY = fxInitialY;
         /***/
@@ -270,10 +273,10 @@ public class InterfaceCall { //Class containing all functions that create or edi
                                                   //before that Configuration.InitialDirection must be set public
         Direction direction2=direction1;
         for (int i=0;i<5;i++){
-            direction2=Configuration.directionLoop(direction2);
+            direction2=Configuration.leftDirection(direction2);
         }
         for(int i=0;i<4;i++){
-            direction1=Configuration.directionLoop(direction1);
+            direction1=Configuration.leftDirection(direction1);
         }
 
         int horizontalMul=1;
@@ -307,8 +310,8 @@ public class InterfaceCall { //Class containing all functions that create or edi
                 count++;
             }
             count+=4;
-            direction2=Configuration.directionLoop(direction2);
-            direction1=Configuration.directionLoop(direction1);
+            direction2=Configuration.leftDirection(direction2);
+            direction1=Configuration.leftDirection(direction1);
             //System.out.println(direction2.toString()+" "+direction1.toString());
 
         }
@@ -338,4 +341,6 @@ public class InterfaceCall { //Class containing all functions that create or edi
         //System.out.println("Node not found");
         return null;
     }
+
+
 }

@@ -109,6 +109,83 @@ public class InterfaceCalculator {
         }
 
     }
+    /**
+     * Copy above
+     *
+     * */
+    public static float[] influenceCut(Integer x, Integer y, Board board){
+        //Function to specify the dimensions of the circles of influence so that they only exist above the board
+
+        boolean cut=false;
+        for(Tile tile: board.edgeTileArray){
+            if(board.coordinateTileMap.get((x).toString()+(y).toString())==tile){
+                //System.out.println("Atom located at edge tile found");
+                cut =true;
+            }
+        }
+
+        if(cut){
+
+            float startAngle;
+            float angleSize;
+            Integer size;
+            if(x==-8){
+                startAngle=270.0f;
+                angleSize=240.0f;
+                if(y==-4){
+                    startAngle+=60.0f;
+                    angleSize-=60;
+                }
+                else if(y==0){
+                    angleSize-=60;
+                }
+            }
+            else if(y==-4){
+                startAngle=330.0f;
+                angleSize=240.0f;
+                if(x==0){
+                    startAngle=30.0f;
+                    angleSize-=60;
+                }
+            }
+            else if(y<=0){
+                startAngle=30.0f;
+                angleSize=240.0f;
+                if(x==8){
+                    angleSize-=60;
+                    startAngle+=60;
+                }
+            }
+            else if(x==8){
+                startAngle=90.0f;
+                angleSize=240.0f;
+                if(y==4){
+                    angleSize-=60;
+                    startAngle+=60;
+                }
+            }
+            else if(y==4){
+                startAngle=150.0f;
+                angleSize=240.0f;
+                if(x==0){
+                    angleSize-=60;
+                    startAngle+=60;
+                }
+            }
+            else{
+                startAngle=210.0f;
+                angleSize=240.0f;
+            }
+            float[] ans = new float[2];
+            ans[0]=startAngle;
+            ans[1]=angleSize;
+            return ans;
+        }
+        float[] ans = new float[2];
+        ans[0]=270.0f;
+        ans[1]=360.0f;
+        return ans;
+    }
 
 
 }

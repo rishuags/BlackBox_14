@@ -74,6 +74,24 @@ public class Board {
         return atomTileCoords;
     }
 
+    public void updateAtomTiles(){
+
+        Set<String> keys = coordinateTileMap.keySet();
+        int i=0;
+        for (String key : keys) {
+            if(i<24){
+                edgeTileArray[i]=coordinateTileMap.get(key);
+            }
+            else{
+                break;
+            }
+            i++;
+        }
+
+    }
+
+
+
 
 
 }

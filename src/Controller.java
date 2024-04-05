@@ -25,10 +25,12 @@ public class Controller extends Application {
 
         Configuration.initGateMap();
         Configuration config = new Configuration();
-        config.generateBoard();
+        Configuration.generateBoard();
 
         Board board = new Board();
         board.coordinateTileMap=config.getCoordMap();
+        //board.edgeTileArray=config.getEdgeTileArrayConfig();
+        board.updateAtomTiles();
         board.GenerateAtoms();
 
         InterfaceCall.atomsDisplay(board,root);
