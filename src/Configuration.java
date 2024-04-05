@@ -84,7 +84,7 @@ public class Configuration {
 
 
     //returns left adjacent direction to traverse in board gen.
-    public static Direction directionLoop(Direction d) {
+    public static Direction leftDirection(Direction d) {
         Direction next;
         switch(d){
             case EAST:
@@ -104,6 +104,33 @@ public class Configuration {
                 break;
             case SOUTH_WEST:
                 next  = Direction.SOUTH_EAST;
+                break;
+            default: throw new IllegalArgumentException("Invalid Direction");
+
+        }
+        return next;
+    }
+
+    public static Direction rightDirection(Direction d) {
+        Direction next;
+        switch(d){
+            case EAST:
+                next  = Direction.SOUTH_EAST;
+                break;
+            case WEST:
+                next  = Direction.NORTH_WEST;
+                break;
+            case NORTH_EAST:
+                next  = Direction.EAST;
+                break;
+            case NORTH_WEST:
+                next  = Direction.NORTH_EAST;
+                break;
+            case SOUTH_EAST:
+                next  = Direction.SOUTH_WEST;
+                break;
+            case SOUTH_WEST:
+                next  = Direction.WEST;
                 break;
             default: throw new IllegalArgumentException("Invalid Direction");
 
@@ -139,7 +166,7 @@ public class Configuration {
                     currentCoordinate = PathCalculator.calculate(currentDirection, currentCoordinate);
                     tileCounter++;
                 }
-                currentDirection = directionLoop(currentDirection);
+                currentDirection = leftDirection(currentDirection);
             }
             currentCoordinate = PathCalculator.calculate(nextRingDirection, currentCoordinate);
         }

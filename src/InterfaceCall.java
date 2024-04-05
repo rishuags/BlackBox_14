@@ -54,8 +54,11 @@ public class InterfaceCall { //Class containing all functions that create or edi
             Integer endGateKey = laser.laserTraversal();
             //System.out.println("Fire: "+(getLasersFired()+1)+", Input Gate: "+Integer.parseInt(laserFX.getId())+" , Output Gate: "+endGateKey);
 
-            if(endGateKey==0){
-                // increaseLasersFired();
+            if(Integer.parseInt(laserFX.getId())==endGateKey){
+                InterfaceCalculator.generateGateLabel(laserFX, -1);
+            }
+            else if(endGateKey==0){
+                //increaseLasersFired();
                 InterfaceCalculator.generateGateLabel(laserFX, 0);
             }
             else{
@@ -231,10 +234,10 @@ public class InterfaceCall { //Class containing all functions that create or edi
         //before that Configuration.InitialDirection must be set public
         Direction direction2=direction1;
         for (int i=0;i<5;i++){
-            direction2=Configuration.directionLoop(direction2);
+            direction2=Configuration.leftDirection(direction2);
         }
         for(int i=0;i<4;i++){
-            direction1=Configuration.directionLoop(direction1);
+            direction1=Configuration.leftDirection(direction1);
         }
 
         int horizontalMul=1;
@@ -268,8 +271,8 @@ public class InterfaceCall { //Class containing all functions that create or edi
                 count++;
             }
             count+=4;
-            direction2=Configuration.directionLoop(direction2);
-            direction1=Configuration.directionLoop(direction1);
+            direction2=Configuration.leftDirection(direction2);
+            direction1=Configuration.leftDirection(direction1);
             //System.out.println(direction2.toString()+" "+direction1.toString());
 
         }

@@ -1,7 +1,7 @@
 public class Gate {
     /***/
-     private Direction d;
-     private Coordinate c;
+    private Direction d;
+    private Coordinate c;
 
 
     public Gate(Direction d, Coordinate c) {
