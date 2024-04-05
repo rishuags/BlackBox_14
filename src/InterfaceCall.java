@@ -137,14 +137,14 @@ public class InterfaceCall { //Class containing all functions that create or edi
         arc.setCenterX(x);
         arc.setCenterY(y);
 
-        arc.setRadiusX(60);
-        arc.setRadiusY(60);
+        arc.setRadiusX(50);
+        arc.setRadiusY(50);
 
         arc.setStartAngle(45.0f);
         arc.setLength(360.0f);
         arc.setType(ArcType.CHORD);
 
-        arc.setStroke(Color.YELLOW);
+        arc.setStroke(Color.YELLOW);//Alternative Colors: YELLOW, GREEN
         arc.setStrokeWidth(2.0);
         arc.setFill(null);
         return arc;
