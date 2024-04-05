@@ -258,7 +258,7 @@ class LaserTest {
 
     }
     @Test
-    void laserEdgeAtom(){
+    void laserAtomAtBoxEdge1(){
         Configuration.generateBoard();
         Configuration.initGateMap();
 
@@ -269,6 +269,47 @@ class LaserTest {
         assertEquals(41, fireLaser(41));
 
     }
+
+
+    @Test
+    void laserAtomAtBoxEdge2(){
+        Configuration.generateBoard();
+        Configuration.initGateMap();
+
+        Map<String, Tile> coordTileMap = Configuration.getCoordTileMap();
+
+        setAtoms(8,2, coordTileMap);
+        setAtoms(4,4, coordTileMap);
+
+        assertEquals(48, fireLaser(21));
+
+//        System.out.println(fireLaser(48));
+
+    }
+
+
+
+    @Test
+    void specialCases(){
+        Configuration.generateBoard();
+        Configuration.initGateMap();
+
+        Map<String, Tile> coordTileMap = Configuration.getCoordTileMap();
+
+        setAtoms(6,4, coordTileMap);
+        setAtoms(-2,3, coordTileMap);
+        setAtoms(0,2, coordTileMap);
+        setAtoms(0,-2, coordTileMap);
+        setAtoms(-4,-3, coordTileMap);
+        setAtoms(0,-4, coordTileMap);
+
+        assertEquals(25, fireLaser(25));
+
+//        System.out.println(fireLaser(48));
+
+    }
+
+
 
 
     //places atom on specific tile (For laser path Testing)

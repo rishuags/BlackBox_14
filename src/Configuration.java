@@ -17,6 +17,10 @@ public class Configuration {
         return coordTileMap;
     }
 
+    public static Tile[] getEdgeTileArrayConfig() {
+        return edgeTileArrayConfig;
+    }
+
     //utility function for reversing direction
     public static Direction reverseDirection(Direction d){
         Direction reverse;

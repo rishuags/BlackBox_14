@@ -24,7 +24,7 @@ public class Laser {
 
     public Integer laserTraversal() {
 
-        /** initialize function parameters(data) **/
+        /** initialize function parameters(data)*/
         Map<Integer, Gate> gateMap = Configuration.getGateMap();
         Gate gate = gateMap.get(inputGate);
 
@@ -39,7 +39,7 @@ public class Laser {
         Direction nextSide = currentTile.laserMap.get(currentSide); //assigns direction based on current side and tile mappings
         Coordinate nextCoordinate = PathCalculator.calculate(nextSide, currentCoordinate);
 
-        /**REFLECTION FOR ATOM EXISTING AT ADJACENT EDGE TILE START*/
+        /**REFLECTION FOR ATOM EXISTING AT ADJACENT EDGE TILE*/
         if(!currentTile.hasAtom()){
             Coordinate outsideBoardCoordinate = PathCalculator.calculate(currentSide, currentCoordinate);
 
@@ -62,15 +62,11 @@ public class Laser {
                 rightCoordinateExists = true;
                 rightTile = Configuration.getCoordTileMap().get(rightCoordinate.getKey());
             }
-
-            if(leftCoordinateExists && leftTile.hasAtom() || rightCoordinateExists&&rightTile.hasAtom()){
-                return findOutputGate(currentTile.getCoordinate().getKey(),currentSide, gateMap);
+            if(leftCoordinateExists && leftTile.hasAtom() || rightCoordinateExists && rightTile.hasAtom()){
+                return findOutputGate(currentTile.getCoordinate().getKey(),currentSide, gateMap);//reversal
             }
 
         }
-
-        /**END*/
-
 
         while (!goesOffBoard(nextCoordinate, currentTile)) { //loop while next coordinate in path exists on board
             System.out.println("Current Tile Coordinate : " + currentCoordinate);
@@ -80,7 +76,6 @@ public class Laser {
 
             Direction newNextSide = lookForAtoms(currentTile, nextSide); /**For current tile, checking up to 4 surrounding tiles (whether they contain atom)**/ /**checks and prints adjacent tiles*/
             if(newNextSide!=nextSide){ //New next side  caused by atom rerouting
-                //The Coordinate that the laser should go to based on newNextSide
                 System.out.println("Found Atom... Rerouting towards... " + newNextSide);
                 Coordinate newNextCoordinate = PathCalculator.calculate(newNextSide, currentCoordinate);
                 System.out.println("Moving to: " + newNextCoordinate.toString() + " \n");
@@ -97,8 +92,6 @@ public class Laser {
                 nextSide = newNextSide;
                 nextCoordinate = newNextCoordinate;
             }
-
-
 
             /**DEFLECTION/REFLECTION LOGIC END*/
 
@@ -131,26 +124,21 @@ public class Laser {
             return 0;
         }
 
+        /**Check left and right for last edge tile*/
+        Direction newNextSide = lookForAtoms(currentTile, nextSide);
 
-        /**
-         * Returning Output Gate based on the current edge tile, and the direction the ray is heading(contra-to gate input direction)
-         **/
-        Integer outputGate = findOutputGate(currentCoordinateKey, nextSide, gateMap);
+        Integer outputGate = findOutputGate(currentCoordinateKey, newNextSide, gateMap);
 
         //System.out.println(path.size());
         System.out.println("Input Gate: " +  inputGate +  " Output Gate: " + outputGate);
         System.out.println("Path: " + path + "\n");
 
-
-
         return outputGate;
     }
-
 
     /**
      * Returning Output Gate based on the current edge tile, and the direction the ray is heading(contra-to gate input direction)
      **/
-
     public Integer findOutputGate(String currentCoordinateKey, Direction nextSide, Map<Integer, Gate> gateMap ){
         Set<Integer> keys = gateMap.keySet(); //returns set of all gate index numbers (1-54)
         Integer outputGate = -1;
@@ -185,18 +173,15 @@ public class Laser {
     }
 
 
-
     /**reroutes traversal direction**/ /**checks and prints adjacent tiles*/
     public Direction lookForAtoms(Tile currentTile, Direction inputDirection){
         System.out.println("Input gate: " + inputGate);
         System.out.println("Current Direction: " + inputDirection);
 
-
         Direction leftDirection  = Configuration.leftDirection(inputDirection);
         System.out.println("Left Direction: " + leftDirection);
         Direction rightDirection = Configuration.rightDirection(inputDirection);
         System.out.println("Right Direction: " + rightDirection + "\n");
-
 
         Coordinate leftCoordinate = PathCalculator.calculate(leftDirection, currentTile.getCoordinate());
         Coordinate rightCoordinate = PathCalculator.calculate(rightDirection, currentTile.getCoordinate());
@@ -227,7 +212,7 @@ public class Laser {
             nextTile = Configuration.getCoordTileMap().get(nextCoordinate.getKey());
         }
 
-        //making deflection cases:
+        /**deflection cases*/
 
         Direction newNextSide = inputDirection;
 
@@ -263,16 +248,13 @@ public class Laser {
             }
         }
 
-
-
-        //case for edge-tiles (tiles which may either not have a left or a right or a next)
+        //Case for edge-tiles (tiles which may either not have a left or a right or a next or )
         if((!nextCoordinateExists || nextCoordinateExists && !nextTile.hasAtom())){
             if(!leftCoordinateExists && rightCoordinateExists){
                 if(rightTile.hasAtom()){
                     newNextSide = Configuration.leftDirection(inputDirection);
                 }
-            }
-            if(leftCoordinateExists && !rightCoordinateExists){
+            } else if(leftCoordinateExists && !rightCoordinateExists){
                 if(leftTile.hasAtom()){
                     newNextSide = Configuration.rightDirection(inputDirection);
                 }
@@ -282,19 +264,13 @@ public class Laser {
                 if(rightTile.hasAtom()){
                     newNextSide = Configuration.leftDirection(Configuration.leftDirection(inputDirection));
                 }
-            }
-            if(leftCoordinateExists && !rightCoordinateExists){
+            } else if(leftCoordinateExists && !rightCoordinateExists){
                 if(leftTile.hasAtom()){
                     newNextSide = Configuration.rightDirection(Configuration.rightDirection(inputDirection));
                 }
             }
         }
 
-
-
-        /***/
-
         return newNextSide;
-
     }
 }
