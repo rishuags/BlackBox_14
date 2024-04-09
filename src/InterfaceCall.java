@@ -2,15 +2,13 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.shape.Polygon;
 import javafx.event.EventHandler;
 import javafx.scene.text.TextAlignment;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -28,21 +26,33 @@ public class InterfaceCall { //Class containing all functions that create or edi
     public static void increaseLasersFired(){LasersFired++;}
     public static Integer getLasersFired(){return LasersFired;}
 
-    private static int tilesSelected=0;
+    //private static int tilesSelected=0;
+    private static ArrayList<Polygon> selectedTileList= new ArrayList<>();
 
-    public static int getTilesSelected(){return tilesSelected;}
-    public static void increaseTileCount(){tilesSelected++;}
-    public static void decreaseTileCount(){tilesSelected--;}
+    public static int getTilesSelected(){
+        return selectedTileList.size();
+        //return tilesSelected;
+    }
+    public static void increaseTileCount(Polygon p){
+        //tilesSelected++;
+        selectedTileList.add(p);
+    }
+    public static void decreaseTileCount(Polygon p){
+        //tilesSelected--;
+        selectedTileList.remove(p);
+    }
     public static EventHandler<MouseEvent> tileSelect= (MouseEvent m)->{//Change the color of tile when clicked
         if(((Polygon)(m.getSource())).getFill()==Color.AQUAMARINE){
             ((Polygon)(m.getSource())).setFill(Color.BLACK);
-            decreaseTileCount();
+            decreaseTileCount(((Polygon)(m.getSource())));
         }
         else if(getTilesSelected()<6){
             //Alternative Colors : DARKGOLDENROD, DARK_AQUAMARINE
             ((Polygon)(m.getSource())).setFill(Color.AQUAMARINE);
-            increaseTileCount();
+            increaseTileCount(((Polygon)(m.getSource())));
         }
+        //System.out.println(getTilesSelected());
+        //System.out.println(calculateFinalScore());
     };
 
     public static EventHandler<MouseEvent> laserClick = (MouseEvent m)-> {
@@ -192,13 +202,6 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
     }
 
-//    public static double[] cutCircInfluence(Board board,Integer [] coord){
-//
-//        if(!board.coordinateTileMap.get(coord[0].toString()+coord[1].toString()).isEdgeTile()){
-//            return null;
-//        }
-//
-//    }
 
 
     public static Polygon generateLaser(Double initX, Double initY, Direction d, String id, Group root){
@@ -264,7 +267,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
         return laserOutline;
     }
 
-    public static void generateLaserInterface (Group root){//Generate all of the gates from where rays are fired
+    public static void generateLaserInterface (Group root){//Generate all the gates from where rays are fired
         Double currentHexX = fxInitialX;
         Double currentHexY = fxInitialY;
         /***/
@@ -342,5 +345,24 @@ public class InterfaceCall { //Class containing all functions that create or edi
         return null;
     }
 
+    public static Integer calculateFinalScore(){
+        //For each guess that is wrong, 5 points are added to the board
+        return score +5*(6-checkAtomSelect());
+    }
+    public static int checkAtomSelect(){
+        Integer rightGuesses=0;
+        Path intersect;
+        //loop through all atoms and all tiles to check if some of these intersects which means there is a right guess
+        for(Circle circle : atomsFX){
+            for(Polygon polygon: selectedTileList){
+                intersect= (Path) Shape.intersect(polygon,circle); //cast the intersection of atoms and tiles to path to use isEmpty()
+                if(!intersect.getElements().isEmpty()){
+                    rightGuesses++;
+                    break;
+                }
+            }
+        }
+        return rightGuesses;
+    }
 
 }
