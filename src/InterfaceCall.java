@@ -1,5 +1,6 @@
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -7,6 +8,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.event.EventHandler;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -15,6 +17,9 @@ import java.util.Map;
 
 public class InterfaceCall { //Class containing all functions that create or edit elements in the interface
 
+    public static ArrayList<Integer> previousScores = new ArrayList<>();
+
+    public static boolean eventEnable = true;
     public static final Font mainFont = new Font("Consolas",30);
     public static final Double fxInitialX=340.0 ;
     public static final Double fxInitialY=75.0 ;
@@ -27,8 +32,8 @@ public class InterfaceCall { //Class containing all functions that create or edi
     public static Integer getLasersFired(){return LasersFired;}
 
     //private static int tilesSelected=0;
-    private static ArrayList<Polygon> selectedTileList= new ArrayList<>();
-
+    public static ArrayList<Polygon> selectedTileList= new ArrayList<>();
+    public static ArrayList<Polygon> firedGates = new ArrayList<>();
     public static int getTilesSelected(){
         return selectedTileList.size();
         //return tilesSelected;
@@ -42,6 +47,11 @@ public class InterfaceCall { //Class containing all functions that create or edi
         selectedTileList.remove(p);
     }
     public static EventHandler<MouseEvent> tileSelect= (MouseEvent m)->{//Change the color of tile when clicked
+
+        if(!eventEnable){
+            return;
+        }
+
         if(((Polygon)(m.getSource())).getFill()==Color.AQUAMARINE){
             ((Polygon)(m.getSource())).setFill(Color.BLACK);
             decreaseTileCount(((Polygon)(m.getSource())));
@@ -51,16 +61,23 @@ public class InterfaceCall { //Class containing all functions that create or edi
             ((Polygon)(m.getSource())).setFill(Color.AQUAMARINE);
             increaseTileCount(((Polygon)(m.getSource())));
         }
-        //System.out.println(getTilesSelected());
-        //System.out.println(calculateFinalScore());
+        System.out.println(getTilesSelected());
+        System.out.println(calculateFinalScore());
     };
 
     public static EventHandler<MouseEvent> laserClick = (MouseEvent m)-> {
+
+        if(!eventEnable){
+            return;
+        }
+
         Group parent = (Group) (((Polygon) (m.getSource())).getParent());
         Polygon laserFX = (Polygon) (m.getSource());
+
         //System.out.println(laserFX.getId());
         if(laserFX.getFill()==Color.BLACK){
             //Configuration.initGateMap();
+            firedGates.add(laserFX);
             score++;
             Map<Integer,Gate> gateMap = Configuration.getGateMap();
             laserFX.setFill(Color.WHITE);
@@ -80,6 +97,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
                 InterfaceCalculator.generateGateLabel(laserFX, getLasersFired());
                 Polygon endLaserFX = (Polygon)(searchNode(parent,endGateKey.toString()));
                 endLaserFX.setFill(Color.WHITE);
+                firedGates.add(endLaserFX);
                 InterfaceCalculator.generateGateLabel(endLaserFX,getLasersFired());
             }
 
@@ -112,7 +130,9 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
     public static void createBoardInterface (Group root ){
         updateScore();//create the scoreboard
-        root.getChildren().add(scoreDisplayFX);
+        if(previousScores.isEmpty()){
+            root.getChildren().add(scoreDisplayFX);
+        }
         Double initialX=fxInitialX;
         Double initialY=fxInitialY;
         for(int i =0;i<9;i++){
@@ -323,16 +343,27 @@ public class InterfaceCall { //Class containing all functions that create or edi
     public static void updateScore(){
         if (scoreDisplayFX==null){ //if no scoreboard has been built yet, create one
             scoreDisplayFX = new Text("Score: "+ String.valueOf(0));
+            scoreDisplayFX.setId("scoreText");
             scoreDisplayFX.setX(fxInitialX+475.0);
             scoreDisplayFX.setY(fxInitialY);
             scoreDisplayFX.setFont(mainFont);
             scoreDisplayFX.setTextAlignment(TextAlignment.JUSTIFY);
             scoreDisplayFX.setStroke(Color.WHITE);
             scoreDisplayFX.setStrokeWidth(1);
+            scoreDisplayFX.setVisible(true);
         }
         else{
             scoreDisplayFX.setText("Score: "+ String.valueOf(score));
         }
+    }
+
+    public static void updateScoreFinal(){
+        //You can only finisht turn
+            scoreDisplayFX.setText("Final Score: "+ String.valueOf(calculateFinalScore()));
+            //changeAtomVisible(atomsFX);
+
+
+
     }
 
     public static Node searchNode(Group root, String id){
@@ -347,7 +378,8 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
     public static Integer calculateFinalScore(){
         //For each guess that is wrong, 5 points are added to the board
-        return score +5*(6-checkAtomSelect());
+        //return score +5*(6-checkAtomSelect());
+        return score +5*(getTilesSelected()-checkAtomSelect());
     }
     public static int checkAtomSelect(){
         Integer rightGuesses=0;
@@ -365,4 +397,41 @@ public class InterfaceCall { //Class containing all functions that create or edi
         return rightGuesses;
     }
 
+    public static void resetInterface(){
+        previousScores.add(calculateFinalScore());
+        score = 0;
+        LasersFired=0;
+        for(Polygon p: selectedTileList){
+            p.setFill(Color.BLACK);
+            //selectedTileList.remove(p);
+        }
+        for(Polygon p: firedGates){
+            p.setFill(Color.BLACK);
+            //selectedTileList.remove(p);
+        }
+        selectedTileList=new ArrayList<Polygon>();
+        updateScore();
+    }
+
+    public static void displayFinalResults(Group previousRoot){
+
+        previousScores.add(calculateFinalScore());
+        Group finalRoot = new Group();
+
+        for(int i=0;i<Controller.numPlayers;i++){
+            Text playerScore = new Text("Player "+(i+1)+" Score: "+ String.valueOf(previousScores.get(i)));
+            //playerScore.setId("scoreText");
+            playerScore.setX(fxInitialX);
+            playerScore.setY(fxInitialY+50*i);
+            playerScore.setFont(mainFont);
+            playerScore.setTextAlignment(TextAlignment.JUSTIFY);
+            playerScore.setStroke(Color.WHITE);
+            playerScore.setStrokeWidth(1);
+            playerScore.setVisible(true);
+            finalRoot.getChildren().add(playerScore);
+        }
+        Stage finalStage = (Stage)((Scene)(previousRoot.getScene())).getWindow();
+        finalStage.setScene(new Scene(finalRoot,1100,600,Color.BLACK));
+        finalStage.show();
+    }
 }
