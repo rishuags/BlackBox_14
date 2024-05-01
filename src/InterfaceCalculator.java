@@ -5,8 +5,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class InterfaceCalculator {
-    //Class made for static components from the interface that provide computations
-
+    //Class made for static components from the interface that provide computations requiring long if statements
     public static void generateGateLabel(Polygon laser, Integer laserCount){//Function to generate a label related to a gate from which a ray has been fired
 
         Group parent = (Group)(laser.getParent());
