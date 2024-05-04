@@ -18,13 +18,15 @@ public class Laser {
         return inputGate;
     }
 
-    //Takes in input gate, returns output gate if laser reaches
-    //Path determined based on unique entry-exit tile-side mappings for each tile
-    //Returns 0 if laser hits atom
 
+
+    /**
+     * Traverses laser through the board given an input gate number
+     * @return returns output gate number or 0 if laser hits atom
+     */
     public Integer laserTraversal() {
 
-        /** initialize function parameters(data)*/
+        // INITIALIZE FUNCTION PARAMETERS
         Map<Integer, Gate> gateMap = Configuration.getGateMap();
         Gate gate = gateMap.get(inputGate);
 
@@ -39,7 +41,7 @@ public class Laser {
         Direction nextSide = currentTile.laserMap.get(currentSide); //assigns direction based on current side and tile mappings
         Coordinate nextCoordinate = PathCalculator.calculate(nextSide, currentCoordinate);
 
-        /**REFLECTION FOR ATOM EXISTING AT ADJACENT EDGE TILE*/
+        //REFLECTION FOR ATOM EXISTING AT ADJACENT EDGE TILE
         if(!currentTile.hasAtom()){
             Coordinate outsideBoardCoordinate = PathCalculator.calculate(currentSide, currentCoordinate);
 
@@ -68,42 +70,36 @@ public class Laser {
 
         }
 
-        while (!goesOffBoard(nextCoordinate, currentTile)) { //loop while next coordinate in path exists on board
-            System.out.println("Current Tile Coordinate : " + currentCoordinate);
+        //TRAVERSAL LOGIC ~ loop while next coordinate in path exists on board
+        while (!goesOffBoard(nextCoordinate, currentTile)) {
+            //System.out.println("Current Tile Coordinate : " + currentCoordinate);
             path.add(currentCoordinateKey);
 
-            /**DEFLECTION/REFLECTION LOGIC START*/
-
-            Direction newNextSide = lookForAtoms(currentTile, nextSide); /**For current tile, checking up to 4 surrounding tiles (whether they contain atom)**/ /**checks and prints adjacent tiles*/
+            //DEFLECTION/REFLECTION LOGIC
+            Direction newNextSide = lookForAtoms(currentTile, nextSide);
             if(newNextSide!=nextSide){ //New next side  caused by atom rerouting
-                System.out.println("Found Atom... Rerouting towards... " + newNextSide);
+                //System.out.println("Found Atom... Rerouting towards... " + newNextSide);
                 Coordinate newNextCoordinate = PathCalculator.calculate(newNextSide, currentCoordinate);
-                System.out.println("Moving to: " + newNextCoordinate.toString() + " \n");
+                //System.out.println("Moving to: " + newNextCoordinate.toString() + " \n");
 
-                //So that laser does not go off board because of atom deflection logic
+                //prevents laser from going of board because of atom deflection
                 if(!boardMap.containsKey(newNextCoordinate.getKey())){
-                    System.out.println("Coordinate out of bounds:  ");
-//                System.out.println("CurrentCoordinateKey: " + currentCoordinateKey);
-//                System.out.println("Next Side:  "  +  nextSide);
-                    Integer outputGate = findOutputGate(currentCoordinateKey, newNextSide, gateMap); //Returning Output Gate based on the current edge tile, and the direction the ray is heading(contra-to gate input direction)
-//                System.out.println("Output gate: " + outputGate);
+                    //System.out.println("Coordinate out of bounds:  " + "\n" + "CurrentCoordinateKey: " + currentCoordinateKey + "\n" + "Next Side:  "  +  nextSide );
+                    Integer outputGate = findOutputGate(currentCoordinateKey, newNextSide, gateMap);
+                    //System.out.println("Output gate: " + outputGate);
                     return outputGate;
                 }
                 nextSide = newNextSide;
                 nextCoordinate = newNextCoordinate;
             }
 
-            /**DEFLECTION/REFLECTION LOGIC END*/
-
-
-            /**ABSORPTION LOGIC**/
+            //ABSORPTION LOGIC
             if (currentTile.hasAtom()) {
-                //break; //break traversal if an atom exists //return 0 because laser gets absorbed (never reaches end gate)
                 return 0;
             }
 
 
-            /** iterate traversal **/
+            //TRAVERSAL ITERATION
             currentCoordinate = nextCoordinate;
             nextCoordinate = PathCalculator.calculate(nextSide, currentCoordinate);
             currentCoordinateKey = currentCoordinate.getKey();
@@ -113,18 +109,16 @@ public class Laser {
             currentSide = currentTile.laserMap.get(nextSide);
             nextSide = currentTile.laserMap.get(currentSide);
         }
-
-        System.out.println("Current Tile Coordinate (Ending Edge Tile Coordinate): " + currentCoordinate); //(Testing)
+        //System.out.println("Current Tile Coordinate (Ending Edge Tile Coordinate): " + currentCoordinate); //(Testing)
         //System.out.println("Last Next Side: " + nextSide);
 
         path.add(currentCoordinateKey); //Adding last tile (edge tile) to path
 
         if (currentTile.hasAtom()) {
-            //break; //break traversal if an atom exists //return 0 because laser gets absorbed (never reaches end gate)
             return 0;
         }
 
-        /**Check left and right for last edge tile*/
+        //Checking surrounding atoms for last tile
         Direction newNextSide = lookForAtoms(currentTile, nextSide);
 
         Integer outputGate = findOutputGate(currentCoordinateKey, newNextSide, gateMap);
@@ -137,7 +131,7 @@ public class Laser {
     }
 
     /**
-     * Returning Output Gate based on the current edge tile, and the direction the ray is heading(contra-to gate input direction)
+     * Returning output gate based on the current edge tile, and the direction the ray is heading(contra-to gate input direction)
      **/
     public Integer findOutputGate(String currentCoordinateKey, Direction nextSide, Map<Integer, Gate> gateMap ){
         Set<Integer> keys = gateMap.keySet(); //returns set of all gate index numbers (1-54)
@@ -161,11 +155,14 @@ public class Laser {
     }
 
 
+    /**
+     * Prevents laser from exiting board by checking if nextCoordinate is within boardMap constraints
+     */
     public  boolean goesOffBoard(Coordinate nextCoordinate, Tile currentTile) {
         boolean goesOffBoard = false;
         String nextCoordinateKey = nextCoordinate.getKey();
 
-        if (currentTile.isEdgeTile()) { //if currentTile is not edge, don't run loop (saves on time)
+        if (currentTile.isEdgeTile()) {
             if (!Configuration.getCoordTileMap().containsKey(nextCoordinateKey)) {goesOffBoard = true;} //if coordinate is out of range of map, out of bounds is true
         }
 
@@ -173,7 +170,11 @@ public class Laser {
     }
 
 
-    /**reroutes traversal direction**/ /**checks and prints adjacent tiles*/
+    /**
+     * Reroutes traversal direction based on atom positions on tiles surrounding currentTile
+     *
+     *
+     */
     public Direction lookForAtoms(Tile currentTile, Direction inputDirection){
         System.out.println("Input gate: " + inputGate);
         System.out.println("Current Direction: " + inputDirection);
@@ -273,4 +274,5 @@ public class Laser {
 
         return newNextSide;
     }
+
 }

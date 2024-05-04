@@ -1,5 +1,4 @@
 public class Gate {
-    /***/
     private Direction d;
     private Coordinate c;
 

@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -15,6 +16,10 @@ import java.util.Random;
 
 public class Controller extends Application {
 
+
+    public static final Integer numPlayers = 2;
+    public static Integer turnCount = 0;
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         Group root = new Group();          //Create group node that will contain all the visible elements
@@ -23,29 +28,33 @@ public class Controller extends Application {
 
 
 
-        Configuration.initGateMap();
-        Configuration config = new Configuration();
-        config.generateBoard();
+        Configuration.initGateMap();    //Initialize the map of the gates-> the variables with the info about the buttons you click
+        //to fire rays
+        Configuration config = new Configuration();//create a configuration object for the board to initialize the rest of the variables
+        Configuration.generateBoard();      //create the board itself
 
         Board board = new Board();
-        board.coordinateTileMap=config.getCoordMap();
+        board.coordinateTileMap=config.getCoordMap();   //make a board variable to contain the information about the board in config
+        //board.edgeTileArray=config.getEdgeTileArrayConfig();
+        board.updateAtomTiles();      //generate the objects inside the board
         board.GenerateAtoms();
 
-        InterfaceCall.atomsDisplay(board,root);
+        InterfaceCall.atomsDisplay(board,root); //display the atoms in the interface
 
 
         //Gate generation tests:
-        InterfaceCall.generateLaserInterface(root);
+        InterfaceCall.generateLaserInterface(root); //generate the tiles in the interface
 
 
         //Create the button to set atoms visible or invisible
-        root.getChildren().add(createHideShowButton());
-        Button mySAbutton=createShuffleAtomsButton(root,board);
-        root.getChildren().add(mySAbutton);
+        //root.getChildren().add(JFXbuttons.createHideShowButton());  //add the button to hide or show the atoms (testing only)
+        Button mySAbutton=JFXbuttons.createShuffleAtomsButton(root,board);//add button to shuffle the atoms
+        root.getChildren().add(mySAbutton);                         //add these buttons to the interface
+        root.getChildren().add(JFXbuttons.createStartButton(board));
         //InterfaceCall.setSAbutton(mySAbutton);
 
 
-        primaryStage.setScene(new Scene(root,1100,600,Color.BLACK));
+        primaryStage.setScene(new Scene(root,1100,600,Color.BLACK));    //start the interface
         primaryStage.show();
     }
 
@@ -53,42 +62,6 @@ public class Controller extends Application {
     public static void main(String[] args){
         launch(args);
     }
-
-    private static Button createHideShowButton(){
-        //Button to cange the visibility of the atoms
-        Button changeVisible= new Button("Hide/Show Atoms");
-        changeVisible.setLayoutX(60);
-        changeVisible.setLayoutY(95);
-        changeVisible.setPrefWidth(235);
-        changeVisible.setPrefWidth(120);
-        changeVisible.setOnAction(event->{ //when button clicked, the array of circles taken
-            InterfaceCall.changeAtomVisible(InterfaceCall.atomsFX);    //as arguments changes its visibility
-        });
-        return changeVisible;
-    }
-
-    private static Button createShuffleAtomsButton(Group root, Board board){
-        //Button to generate atoms randomly again
-
-        Button shuffle= new Button("Shuffle Atoms");
-        shuffle.setId("SAButton");
-        shuffle.setLayoutX(60);
-        shuffle.setLayoutY(395);
-        shuffle.setPrefWidth(235);
-        shuffle.setPrefWidth(120);
-        shuffle.setOnAction(event->{ //when button clicked, the array of circles taken
-            for(int i=0;i<6;i++){
-                //System.out.println(atomArr[i]);
-                root.getChildren().remove(InterfaceCall.atomsFX[i]);
-                root.getChildren().remove(InterfaceCall.influenceFX[i]);
-                //System.out.println("atom removed");
-            }
-            board.GenerateAtoms();
-            InterfaceCall.atomsDisplay(board,root);
-        });
-        return shuffle;
-    }
-
 
 
 }
