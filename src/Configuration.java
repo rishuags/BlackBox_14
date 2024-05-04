@@ -9,18 +9,17 @@ public class Configuration {
     private static final Integer initY = 4;
     private static final Direction initDirection = Direction.SOUTH_WEST;
 
-    /***/
+
     private static Integer gateID;
     private static final Map<Integer, Gate> gateMap = new LinkedHashMap<>();
 
     public static Map<String, Tile> getCoordTileMap() {
         return coordTileMap;
     }
-    public Tile[] getEdgeTileArrayConfig(){
-        return edgeTileArrayConfig;
-    }
 
-    //utility function for reversing direction
+    /**
+     * Reverses direction
+     */
     public static Direction reverseDirection(Direction d){
         Direction reverse;
         switch(d){
@@ -49,12 +48,25 @@ public class Configuration {
 
         return reverse;
     }
-    /***
-     implementing algorithm
 
 
-     ***/
+    /**
+     * Initializes gateMap with 54 gates
+     */
+    public static void initGateMap() {
+        //54 Total Inputs/Gates
+        fillGateMap(1, 9, Direction.SOUTH_EAST, Direction.EAST, Direction.SOUTH_WEST, new Coordinate(0,4));
+        fillGateMap(10, 18, Direction.NORTH_EAST, Direction.EAST, Direction.SOUTH_EAST, new Coordinate(-8,0 ));
+        fillGateMap(19, 27, Direction.NORTH_EAST, Direction.NORTH_WEST, Direction.EAST, new Coordinate(-8,-4));
+        fillGateMap(28, 36, Direction.WEST, Direction.NORTH_WEST, Direction.NORTH_EAST, new Coordinate(0, -4));
+        fillGateMap(37, 45, Direction.WEST, Direction.SOUTH_WEST, Direction.NORTH_WEST, new Coordinate(8,0 ));
+        fillGateMap(46, 54, Direction.SOUTH_EAST, Direction.SOUTH_WEST, Direction.WEST, new Coordinate(8, 4));
+    }
 
+    /**
+     * Helper function for initGateMap, i.e. links an ID to a Gate object comprising a coordinate and initial direction
+
+     */
     public static void fillGateMap( Integer startGate, Integer endGate, Direction odd, Direction even, Direction movingDirection, Coordinate startingCoordinate) {
         Coordinate currentCoordinate = startingCoordinate;
         int flag = 0; //Switching. Every second gate
@@ -75,18 +87,10 @@ public class Configuration {
     }
 
 
-    public static void initGateMap() {
-        //54 Total Inputs/Gates
-        fillGateMap(1, 9, Direction.SOUTH_EAST, Direction.EAST, Direction.SOUTH_WEST, new Coordinate(0,4));
-        fillGateMap(10, 18, Direction.NORTH_EAST, Direction.EAST, Direction.SOUTH_EAST, new Coordinate(-8,0 ));
-        fillGateMap(19, 27, Direction.NORTH_EAST, Direction.NORTH_WEST, Direction.EAST, new Coordinate(-8,-4));
-        fillGateMap(28, 36, Direction.WEST, Direction.NORTH_WEST, Direction.NORTH_EAST, new Coordinate(0, -4));
-        fillGateMap(37, 45, Direction.WEST, Direction.SOUTH_WEST, Direction.NORTH_WEST, new Coordinate(8,0 ));
-        fillGateMap(46, 54, Direction.SOUTH_EAST, Direction.SOUTH_WEST, Direction.WEST, new Coordinate(8, 4));
-    }
+    /**
+     * @return  leftAdjacent direction to currentDirection
 
-
-    //returns left adjacent direction to traverse in board gen.
+     */
     public static Direction leftDirection(Direction d) {
         Direction next;
         switch(d){
@@ -114,6 +118,9 @@ public class Configuration {
         return next;
     }
 
+    /**
+     * @return rightAdjacent direction to currentDirection
+     */
     public static Direction rightDirection(Direction d) {
         Direction next;
         switch(d){
@@ -141,7 +148,9 @@ public class Configuration {
         return next;
     }
 
-    //generates board in spiral pattern, starting from top left tile
+    /**
+     * Generates boardMap coordinates in a spiral
+     */
     public static void generateBoard(){
         //initial parameters for pattern gen.
         Coordinate currentCoordinate = new Coordinate(initX, initY);
@@ -163,7 +172,6 @@ public class Configuration {
                     if (tileCounter <= 24) { //if currentTile is an edge tile
                         currentTile.setEdgeTile();
                         edgeTileArrayConfig[i] = currentTile;
-                        //System.out.println(edgeTileArrayConfig[i].getCoordinate());
                     }
                     coordTileMap.put(currentCoordinate.getKey(), currentTile);
 
@@ -182,7 +190,6 @@ public class Configuration {
         return gateMap;
     }
 
-    /***/
 
 
     public Map<String, Tile> getCoordMap() {return coordTileMap;}
