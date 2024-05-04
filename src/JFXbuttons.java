@@ -20,6 +20,11 @@ public class JFXbuttons {
         return changeVisible;
     }
 
+    /***
+     * function that makes a button that shuffles the atoms displayed in the board
+     * @param root root containing the visual elements that will be loaded by this function
+     * @param board Board object containing the logical elements composing the board
+     */
     public static Button createShuffleAtomsButton(Group root, Board board){
         //Button to generate atoms randomly again
 
@@ -30,18 +35,20 @@ public class JFXbuttons {
         shuffle.setPrefWidth(235);
         shuffle.setPrefWidth(120);
         shuffle.setOnAction(event->{ //when button clicked, the array of circles taken
-            for(int i=0;i<6;i++){
-                //System.out.println(atomArr[i]);
+            for(int i=0;i<6;i++){//clear atom array in the Interface
                 root.getChildren().remove(InterfaceCall.atomsFX[i]);
                 root.getChildren().remove(InterfaceCall.influenceFX[i]);
-                //System.out.println("atom removed");
             }
-            board.GenerateAtoms();
+            board.GenerateAtoms();//clear and generate atoms in backend
             InterfaceCall.atomsDisplay(board,root);
         });
         return shuffle;
     }
 
+    /***
+     * function that makes a button that starts the turn of the setter
+     * @param board Board object containing the logical elements composing the board
+     */
     public static Button createStartButton(Board board){
         //Button to cange the visibility of the atoms
         Button changeVisible= new Button("Start turn");
@@ -63,6 +70,10 @@ public class JFXbuttons {
         return changeVisible;
     }
 
+    /***
+     * function that makes a button that ends the turn of the experimenter
+     * @param board Board object containing the logical elements composing the board
+     */
     public static Button createFinishButton(Board board){
         //Button to cange the visibility of the atoms
         Button changeVisible= new Button("Finish turn");
@@ -88,7 +99,10 @@ public class JFXbuttons {
         });
         return changeVisible;
     }
-
+    /***
+     * function that makes a button that resets the board so that the setter can start
+     * @param board Board object containing the logical elements composing the board
+     */
     private static Button createResetButton(Board board){
         //Button to cange the visibility of the atoms
         Button changeVisible= new Button("Reset");
@@ -113,7 +127,7 @@ public class JFXbuttons {
             //board = new Board();
             board.coordinateTileMap=config.getCoordMap();
             //board.edgeTileArray=config.getEdgeTileArrayConfig();
-            board.updateAtomTiles();
+            board.setEdgeTiles();
             board.GenerateAtoms();
 
             //Resetting the score values
@@ -146,6 +160,10 @@ public class JFXbuttons {
         return changeVisible;
     }
 
+    /***
+     * function that makes a button that ends the game
+     * @param board Board object containing the logical elements composing the board
+     */
     private static Button createEndGameButton(Board board){
         //Button to end the game
         Button changeVisible= new Button("End game");

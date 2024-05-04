@@ -85,10 +85,10 @@ public class InterfaceTest {
         Double x = InterfaceCall.fxInitialX;
         Double y = InterfaceCall.fxInitialY;
         customGate.getPoints().addAll(x, y+8,x,y+22, x-7.4, y+22, x-7.4, y+8);
-        Polygon functGate = InterfaceCall.generateLaser(x,y,Direction.WEST,"1");
+        Polygon functGate = InterfaceCall.generateGate(x,y,Direction.WEST,"1");
         assertEquals(customGate.getPoints(),functGate.getPoints());
 
-        functGate=InterfaceCall.generateLaser(x,y,Direction.NORTH_WEST,"1");
+        functGate=InterfaceCall.generateGate(x,y,Direction.NORTH_WEST,"1");
         customGate=new Polygon();
         customGate.getPoints().addAll(x+7.0,y-5.5,x+22,y-14.5,x+22-5,y-14-6.66,x+8.5-5,y-5.0-6.66);
         assertEquals(customGate.getPoints(),functGate.getPoints());

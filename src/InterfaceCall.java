@@ -38,21 +38,32 @@ public class InterfaceCall { //Class containing all functions that create or edi
     public static ArrayList<Polygon> firedGates = new ArrayList<>();//Arraylist of the gates from which a ray was fired
 
     //Getters and Setters for variables above
+
+    /**
+     * @return returns the current tiles selected by the user
+     */
     public static int getTilesSelected(){
         return selectedTileList.size();
         //return tilesSelected;
     }
+    /**
+     * add to the selected tiles a new one
+     * @param p input hexagon to be added to the selected tile list
+     */
     public static void increaseTileCount(Polygon p){
-        //tilesSelected++;
         selectedTileList.add(p);
     }
+    /**
+     * remove the selected tile
+     *      * @param p input hexagon to be removed from the selected tiles
+     */
     public static void decreaseTileCount(Polygon p){
         //tilesSelected--;
         selectedTileList.remove(p);
     }
 
     /**
-     *
+     * function that generates a hexagon with tile events
      * @param x x coordinate from which a unique hexagon is created
      * @param y y coordinate from which a unique hexagon is created
      * */
@@ -77,6 +88,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
     }
 
     /***
+     * function that generates multiple hexagon that will be the board
      * @param root root containing the visual elements that will be loaded by this function
      */
     public static void createBoardInterface (Group root ){
@@ -106,6 +118,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
         }
     }
     /**
+     * function to generate a red circle working as an atom
      * @param x x coordinate from which a unique circle is created
      * @param y y coordinate from which a unique circle is created
      * */
@@ -120,7 +133,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
     }
 
     /**
-     *
+     * function to build the circle of influence of an atom
      * @param x x coordinate from which a unique arch is created
      * @param y y coordinate from which a unique arch is created
      * @param startAngle angle from which the arch will be created
@@ -145,7 +158,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
     }
 
     /**
-     *
+     * function to turn backend logic coordinates to working javafx coordinates
      * @param x x coordinate from our coordinate system, see documentation
      * @param y y coordinate from our coordinate system, see documentation
      *
@@ -176,6 +189,7 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
 
     /**
+     * function that generates the visual elements of the board
      * @param board board object containing all back end elements holding info about the state of the game
      * @param root root containing the visual elements that will be modified by this function
      * */
@@ -202,21 +216,23 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
 
     /**
-     *
+     * function that generates a square with specific event handling that will represent gates
      * @param id id which will adddress the button to a gate object
      * @param d direction to which the gate will be pointing, see documentation
      *
      * @param initX x coordinate from which the gate or laser button is created, always the top left corner of a hexagon
      * @param initY y coordinate from which the gate or laser button is created, always the top left corner of a hexagon
      * */
-    public static Polygon generateLaser(Double initX, Double initY, Direction d, String id){
+    public static Polygon generateGate(Double initX, Double initY, Direction d, String id){
 
     //Generates the button that has to be pressed to fire a ray
 
         Polygon laserOutline = new Polygon();
 
-        //alpha vector=(8,-6)
+        //alpha vector=(8,-6)   *vectors used to get orientations of the gates
         //Beta vector=(-6,-8)
+
+
         int horizontalMul=-1;
         int verticalMul=1;
         Double x=initX,y=initY;
@@ -237,13 +253,6 @@ public class InterfaceCall { //Class containing all functions that create or edi
                     (x-22.0*horizontalMul)+5*horizontalMul,(y-14.0*verticalMul)-6.66*verticalMul,//y-0.5
                     (x-8.5*horizontalMul)+5*horizontalMul,(y-5.0*verticalMul)-6.66*verticalMul // y-0.5
             );
-            //Coordinates for less thick gates
-            /*laserOutline.getPoints().addAll(
-                    x - 10.0*horizontalMul, y - 7.5*verticalMul,
-                    x - 18.0*horizontalMul, y - 12.5*verticalMul,
-                    (x-18.0*horizontalMul)+6*horizontalMul,(y-12.5*verticalMul)-8*verticalMul,
-                    (x-11.5*horizontalMul)+6*horizontalMul,(y-7.5*verticalMul)-8*verticalMul
-            );*/
         }
         //-------
         else {
@@ -253,14 +262,6 @@ public class InterfaceCall { //Class containing all functions that create or edi
                     x + 7.4*horizontalMul, y + 22,
                     x + 7.4*horizontalMul, y + 8
             );
-            //Coordinates for less thick gates
-            /*laserOutline.getPoints().addAll(
-                    x , y + 10,
-                    x , y + 20,
-                    x + 10*horizontalMul, y + 20,
-                    x + 10*horizontalMul, y + 10
-            );*/
-
         }
         laserOutline.setFill(Color.BLACK);
         laserOutline.setStrokeWidth(2);
@@ -272,7 +273,8 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
         return laserOutline;
     }
-    /***
+    /**
+     * function to generate all gates on the board
      * @param root root containing the visual elements that will be loaded by this function
      */
     public static void generateLaserInterface (Group root){
@@ -307,13 +309,13 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
             for (int i = 0; i < 5; i++) {
                 if (i != 0) {
-                    root.getChildren().add(generateLaser(currentHexX, currentHexY, direction1, ((Integer) (count+i-1)).toString()));//add to root later
+                    root.getChildren().add(generateGate(currentHexX, currentHexY, direction1, ((Integer) (count+i-1)).toString()));//add to root later
                 }
                 if(count+i==55){
-                    root.getChildren().add(generateLaser(currentHexX, currentHexY, direction2, ((Integer) (1)).toString()));//add to root later
+                    root.getChildren().add(generateGate(currentHexX, currentHexY, direction2, ((Integer) (1)).toString()));//add to root later
                 }
                 else{
-                    root.getChildren().add(generateLaser(currentHexX, currentHexY, direction2, ((Integer) (count+i)).toString()));//add to root later
+                    root.getChildren().add(generateGate(currentHexX, currentHexY, direction2, ((Integer) (count+i)).toString()));//add to root later
                 }
                 if(i!=4){
                     currentHexX+=30*horizontalMul;
@@ -328,6 +330,9 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
         }
     }
+    /**
+     * Function to update the score text or generate it if necessary
+     */
     public static void updateScore(){
         //Update the score text element in the interface by  updating it with the most recent info
         //about the gates fired
@@ -346,7 +351,9 @@ public class InterfaceCall { //Class containing all functions that create or edi
             scoreDisplayFX.setText("Score: "+ String.valueOf(score));
         }
     }
-
+    /**
+     * Function to update the scoreboard to the end of the round score
+     */
     public static void updateScoreFinal(){
         //Calculate final score and display it considering the right and wrong guesses + gates fired
             scoreDisplayFX.setText("Final Score: "+ String.valueOf(calculateFinalScore()));
@@ -355,6 +362,10 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
 
     }
+
+    /**
+     * Function search a node with a specific id in a root
+     */
     public static Node searchNode(Group root, String id){
         //search a node with a specific id in a root
         for(Node node: root.getChildren()){
@@ -365,12 +376,18 @@ public class InterfaceCall { //Class containing all functions that create or edi
         //System.out.println("Node not found");
         return null;
     }
-
+    /**
+     * Function to calculate the final score of a round
+     */
     public static Integer calculateFinalScore(){
         //For each guess that is wrong, 5 points are added to the board
         //return score +5*(6-checkAtomSelect());
         return score +5*(getTilesSelected()-checkAtomSelect());
     }
+
+    /**
+     * Function to check if the selected tiles contain an atom
+     */
     public static int checkAtomSelect(){
 
         //check if the tiles selected contain atoms -> getting the score
@@ -388,7 +405,9 @@ public class InterfaceCall { //Class containing all functions that create or edi
         }
         return rightGuesses;
     }
-
+    /**
+     * Function to reset interface elements to begin a new rounf
+     */
     public static void resetInterface(){
 
         //set the selected tiles to black + reseting the score + reseting the gates
@@ -407,6 +426,9 @@ public class InterfaceCall { //Class containing all functions that create or edi
         updateScore();
     }
 
+    /**
+     * Function to update the scoreboard to the end of game
+     */
     public static void displayFinalResults(Group previousRoot){
 
         //Display the score in a new stage to remove all previous elements
@@ -416,7 +438,6 @@ public class InterfaceCall { //Class containing all functions that create or edi
 
         for(int i=0;i<Controller.numPlayers;i++){
             Text playerScore = new Text("Player "+(i+1)+" Score: "+ String.valueOf(previousScores.get(i)));
-            //playerScore.setId("scoreText");
             playerScore.setX(fxInitialX);
             playerScore.setY(fxInitialY+50*i);
             playerScore.setFont(mainFont);

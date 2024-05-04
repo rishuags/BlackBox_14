@@ -36,7 +36,7 @@ public class Controller extends Application {
         Board board = new Board();
         board.coordinateTileMap=config.getCoordMap();   //make a board variable to contain the information about the board in config
         //board.edgeTileArray=config.getEdgeTileArrayConfig();
-        board.updateAtomTiles();      //generate the objects inside the board
+        board.setEdgeTiles();      //generate the objects inside the board
         board.GenerateAtoms();
 
         InterfaceCall.atomsDisplay(board,root); //display the atoms in the interface

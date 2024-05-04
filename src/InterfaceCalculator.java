@@ -6,23 +6,30 @@ import javafx.scene.text.Text;
 
 public class InterfaceCalculator {
     //Class made for static components from the interface that provide computations requiring long if statements
+    /**
+     * Function to generate a label on top of a gate that has fired or received a laser
+     */
     public static void generateGateLabel(Polygon laser, Integer laserCount){//Function to generate a label related to a gate from which a ray has been fired
 
         Group parent = (Group)(laser.getParent());
-
+        //create the text for the gates where a number will be displayed
         Text gateLabel= new Text();
 
         //Search for the initial gate that was clicked
+
+        //case for a rebound : a green R is displayed
         if(laserCount==-1){
             gateLabel.setText("R");
             gateLabel.setFill(Color.GREENYELLOW);
             gateLabel.setStroke(Color.GREENYELLOW);
         }
+        //case for hitting an atom: a red H is displayed
         else if(laserCount==0){
             gateLabel.setText("H");
             gateLabel.setFill(Color.RED);
             gateLabel.setStroke(Color.RED);
         }
+        //case for a deflection a yellow number wil be displayed both at the gate
         else{
             gateLabel.setText(((Integer)(laserCount)).toString());
             gateLabel.setFill(Color.GOLD);
@@ -30,6 +37,8 @@ public class InterfaceCalculator {
         }
         gateLabel.setStrokeWidth(0.7);
         gateLabel.setFont(Font.font(14));
+
+        //Long if statement for the coordinates of the label depending on the gate clicked
 
         if(laser.getPoints().get(0).equals(laser.getPoints().get(2))){
             if(laser.getPoints().get(0) < laser.getPoints().get(4)){
@@ -109,9 +118,8 @@ public class InterfaceCalculator {
 
     }
     /**
-     * Copy above
-     *
-     * */
+     * Function to specify the dimensions of the circles of influence so that they only exist above the board
+     */
     public static float[] influenceCut(Integer x, Integer y, Board board){
         //Function to specify the dimensions of the circles of influence so that they only exist above the board
 
